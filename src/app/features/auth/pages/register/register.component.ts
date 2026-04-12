@@ -34,13 +34,6 @@ export class RegisterComponent {
   isLoading = signal(false);
   serverError = signal<string | null>(null);
   successMessage = signal<string | null>(null);
-  currentStep = signal(0);
-
-  readonly steps = [
-    { title: 'Personal info', desc: 'Name and username' },
-    { title: 'Contact details', desc: 'Your email address' },
-    { title: 'Secure password', desc: 'Keep your account safe' },
-  ];
 
   constructor(
     private fb: FormBuilder,
@@ -57,14 +50,6 @@ export class RegisterComponent {
       },
       { validators: passwordMatchValidator }
     );
-
-    // Advance the step tracker as the user fills out fields
-    this.registerForm.valueChanges.subscribe((v) => {
-      if (v.password?.length >= 8) this.currentStep.set(3);
-      else if (v.email) this.currentStep.set(2);
-      else if (v.full_name || v.username) this.currentStep.set(1);
-      else this.currentStep.set(0);
-    });
   }
 
   public get form(): { [key: string]: FormControl } { return this.registerForm.controls as { [key: string]: FormControl }; }

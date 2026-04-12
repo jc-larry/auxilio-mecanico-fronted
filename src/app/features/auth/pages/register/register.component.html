@@ -1,77 +1,13 @@
 <div class="min-h-screen flex bg-surface">
 
-    <!-- ── Left panel: brand ── -->
-    <div
-        class="hidden lg:flex w-[46%] xl:w-[42%] machined-gradient flex-col justify-between p-10 xl:p-14 relative overflow-hidden shrink-0">
-
-        <!-- Decorative rings -->
-        <div class="absolute -top-20 -right-20 w-72 h-72 rounded-full border border-white/5"></div>
-        <div class="absolute bottom-1/4 -right-12 w-48 h-48 rounded-full border border-white/5"></div>
-        <div class="absolute -bottom-16 left-1/3 w-64 h-64 rounded-full border border-white/5"></div>
-
-        <!-- Logo -->
-        <div class="flex items-center gap-3 relative z-10">
-            <div class="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
-                <span class="material-symbols-outlined text-on-primary"
-                    style="font-variation-settings:'FILL' 1; font-size:22px;">precision_manufacturing</span>
-            </div>
-            <div>
-                <p class="font-headline font-bold text-on-primary text-lg leading-tight">Precision Flow</p>
-                <p class="text-[10px] uppercase tracking-widest text-on-primary/40 font-label font-bold">Auth System</p>
-            </div>
-        </div>
-
-        <!-- Steps tracker -->
-        <div class="relative z-10 space-y-5">
-            <p class="text-[11px] uppercase tracking-widest text-secondary font-label font-bold mb-6">Getting started
-            </p>
-
-            <div *ngFor="let step of steps; let i = index" class="flex items-start gap-4">
-                <div class="w-7 h-7 rounded-full shrink-0 flex items-center justify-center text-xs font-bold font-label"
-                    [class]="i === currentStep()
-                ? 'bg-secondary text-on-secondary'
-                : i < currentStep()
-                  ? 'bg-white/20 text-on-primary'
-                  : 'bg-white/5 text-on-primary/30'">
-                    <span *ngIf="i < currentStep()" class="material-symbols-outlined"
-                        style="font-size:14px; font-variation-settings:'FILL' 1;">check</span>
-                    <span *ngIf="i >= currentStep()">{{ i + 1 }}</span>
-                </div>
-                <div class="pt-0.5">
-                    <p class="text-sm font-label font-bold leading-tight"
-                        [class]="i === currentStep() ? 'text-on-primary' : i < currentStep() ? 'text-on-primary/50' : 'text-on-primary/25'">
-                        {{ step.title }}
-                    </p>
-                    <p class="text-xs font-body mt-0.5"
-                        [class]="i === currentStep() ? 'text-on-primary/60' : 'text-on-primary/20'">
-                        {{ step.desc }}
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <p class="text-[10px] text-on-primary/25 font-label uppercase tracking-widest relative z-10">
-            Powered by Precision Flow v1.0
-        </p>
-    </div>
-
-    <!-- ── Right panel: form ── -->
+    <!-- ── Main panel: form ── -->
     <div class="flex-1 flex flex-col justify-center items-center px-6 py-12 sm:px-12 overflow-y-auto">
         <div class="w-full max-w-md">
 
-            <!-- Mobile logo -->
-            <div class="flex items-center gap-3 mb-10 lg:hidden">
-                <div class="w-9 h-9 machined-gradient rounded-lg flex items-center justify-center">
-                    <span class="material-symbols-outlined text-on-primary"
-                        style="font-variation-settings:'FILL' 1; font-size:20px;">precision_manufacturing</span>
-                </div>
-                <p class="font-headline font-bold text-primary text-base">Precision Flow</p>
-            </div>
-
             <!-- Heading -->
-            <p class="text-[11px] uppercase tracking-widest text-on-surface-variant font-label font-bold mb-2">New
-                account</p>
-            <h2 class="font-headline font-extrabold text-primary text-3xl mb-8 leading-tight">Create your profile</h2>
+            <p class="text-[11px] uppercase tracking-widest text-on-surface-variant font-label font-bold mb-2">Nueva
+                cuenta</p>
+            <h2 class="font-headline font-extrabold text-primary text-3xl mb-8 leading-tight">Crea tu perfil</h2>
 
             <!-- Success -->
             <div *ngIf="successMessage()"
@@ -108,8 +44,8 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <app-input-field id="password" label="Contraseña" type="password" placeholder="Min. 8 chars"
                         [required]="true" icon="lock" [control]="form['password']" formControlName="password" />
-                    <app-input-field id="confirm_password" label="Confirm password" type="password"
-                        placeholder="Repeat password" [required]="true" icon="lock_reset"
+                    <app-input-field id="confirm_password" label="Confirmar contraseña" type="password"
+                        placeholder="Repetir contraseña" [required]="true" icon="lock_reset"
                         [control]="confirmPasswordControl" formControlName="confirm_password" />
                 </div>
 
@@ -146,7 +82,7 @@
             <div class="flex items-center gap-3 my-7">
                 <div class="flex-1 h-px bg-outline-variant/40"></div>
                 <span
-                    class="text-[11px] uppercase tracking-widest text-on-surface-variant font-label font-bold">or</span>
+                    class="text-[11px] uppercase tracking-widest text-on-surface-variant font-label font-bold">o</span>
                 <div class="flex-1 h-px bg-outline-variant/40"></div>
             </div>
 
