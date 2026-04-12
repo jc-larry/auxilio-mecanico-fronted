@@ -1,0 +1,26 @@
+<div class="flex flex-col gap-1.5">
+    <label [for]="id" class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">
+        {{ label }}<span *ngIf="required" class="text-secondary ml-0.5">*</span>
+    </label>
+
+    <div class="relative">
+        <span *ngIf="icon"
+            class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none"
+            style="font-size:18px;">{{ icon }}</span>
+
+        <input [id]="id" [type]="inputType" [placeholder]="placeholder" [disabled]="isDisabled" [value]="value"
+            (input)="onInput($event)" (blur)="onTouched()" [class]="inputClasses" />
+
+        <button *ngIf="type === 'password'" type="button" (click)="toggleVisibility()"
+            class="absolute right-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface transition-colors">
+            <span class="material-symbols-outlined" style="font-size:18px;">
+                {{ showPassword ? 'visibility_off' : 'visibility' }}
+            </span>
+        </button>
+    </div>
+
+    <p *ngIf="errorMessage" class="text-[11px] text-error flex items-center gap-1.5 font-label font-medium">
+        <span class="material-symbols-outlined" style="font-size:14px; font-variation-settings:'FILL' 1;">error</span>
+        {{ errorMessage }}
+    </p>
+</div>
