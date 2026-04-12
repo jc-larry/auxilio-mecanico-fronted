@@ -12,7 +12,7 @@ export const DASHBOARD_ROUTES: Routes = [
       {
         path: 'home',
         loadComponent: () =>
-          import('./pages/main-dashboard/main-dashboard.component').then(m => m.MainDashboardComponent),
+          import('./dashboard.component').then(m => m.DashboardComponent),
       },
       {
         path: 'requests',

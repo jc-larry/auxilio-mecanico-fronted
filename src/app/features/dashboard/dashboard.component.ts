@@ -27,28 +27,28 @@ export class DashboardComponent {
     const u = this.user();
     if (!u) return [];
     return [
-      { label: 'Full name', value: u.full_name, badge: false, badgeClass: '' },
-      { label: 'Email', value: u.email, badge: false, badgeClass: '' },
-      { label: 'Username', value: `@${u.username}`, badge: false, badgeClass: '' },
+      { label: 'Nombre completo', value: u.full_name, badge: false, badgeClass: '' },
+      { label: 'Correo electrónico', value: u.email, badge: false, badgeClass: '' },
+      { label: 'Nombre de usuario', value: `@${u.username}`, badge: false, badgeClass: '' },
       {
-        label: 'Account status',
-        value: u.is_active ? 'Active' : 'Inactive',
+        label: 'Estado de la cuenta',
+        value: u.is_active ? 'Activo' : 'Inactivo',
         badge: true,
         badgeClass: u.is_active
           ? 'bg-emerald-50 text-emerald-700 border border-emerald-100'
           : 'bg-red-50 text-red-700 border border-red-100',
       },
       {
-        label: 'Verified',
-        value: u.is_verified ? 'Verified' : 'Pending',
+        label: 'Verificado',
+        value: u.is_verified ? 'Verificado' : 'Pendiente',
         badge: true,
         badgeClass: u.is_verified
           ? 'bg-blue-50 text-blue-700 border border-blue-100'
           : 'bg-amber-50 text-amber-700 border border-amber-100',
       },
       {
-        label: 'Last login',
-        value: u.last_login ? new Date(u.last_login).toLocaleString() : 'First session',
+        label: 'Último inicio de sesión',
+        value: u.last_login ? new Date(u.last_login).toLocaleString() : 'Primera sesión',
         badge: false,
         badgeClass: '',
       },
