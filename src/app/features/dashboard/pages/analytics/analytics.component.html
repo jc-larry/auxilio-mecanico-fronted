@@ -1,0 +1,198 @@
+<div class="p-8 bg-background min-h-full space-y-8">
+
+    <!-- Header -->
+    <div>
+        <h1 class="font-headline font-extrabold text-on-surface text-3xl">Analíticas</h1>
+        <p class="text-on-surface-variant mt-1 text-sm font-body">Visión general del rendimiento de Auxilio Mecánico</p>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="loading()" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div *ngFor="let i of [1,2,3,4]" class="h-64 bg-surface-container-low rounded-xl animate-pulse"></div>
+    </div>
+
+    <!-- ═══ Summary KPIs ═══ -->
+    <section *ngIf="!loading()" class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-surface-container-lowest rounded-xl p-5 ghost-shadow">
+            <p class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label mb-2">Solicitudes Totales</p>
+            <span class="font-headline font-extrabold text-3xl text-on-surface">{{ summary().total_requests }}</span>
+            <p class="text-xs text-on-surface-variant font-body mt-1">{{ summary().active_requests }} activas · {{ summary().completed_requests }} completadas</p>
+        </div>
+        <div class="bg-surface-container-lowest rounded-xl p-5 ghost-shadow">
+            <p class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label mb-2">Equipo Técnico</p>
+            <div class="flex items-baseline gap-1">
+                <span class="font-headline font-extrabold text-3xl text-on-surface">{{ summary().available_mechanics }}</span>
+                <span class="font-headline font-bold text-xl text-on-surface-variant"> / {{ summary().total_mechanics }}</span>
+            </div>
+            <p class="text-xs text-emerald-600 font-semibold font-label mt-1">Disponibles ahora</p>
+        </div>
+        <div class="bg-surface-container-lowest rounded-xl p-5 ghost-shadow">
+            <p class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label mb-2">Inventario</p>
+            <span class="font-headline font-extrabold text-3xl text-on-surface">{{ summary().total_parts }}</span>
+            <p class="text-xs font-body mt-1"
+                [class]="summary().critical_parts > 0 ? 'text-secondary font-bold' : 'text-on-surface-variant'">
+                {{ summary().critical_parts > 0 ? summary().critical_parts + ' en nivel crítico' : 'Sin alertas' }}
+            </p>
+        </div>
+        <div class="bg-surface-container-lowest rounded-xl p-5 ghost-shadow">
+            <p class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label mb-2">Valor del Inventario</p>
+            <span class="font-headline font-extrabold text-3xl text-on-surface">{{ formatCurrency(summary().inventory_value) }}</span>
+        </div>
+    </section>
+
+    <!-- ═══ Bento Grid ═══ -->
+    <section *ngIf="!loading()" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        <!-- ── Bar chart: Solicitudes por día ── -->
+        <div class="lg:col-span-8 bg-surface-container-lowest rounded-xl p-6 ghost-shadow">
+            <div class="flex justify-between items-start mb-6">
+                <div>
+                    <h2 class="font-headline font-bold text-on-surface text-xl">Solicitudes por Día</h2>
+                    <p class="text-sm text-on-surface-variant mt-0.5 font-body">Volumen de los últimos 7 días</p>
+                </div>
+                <span class="px-3 py-1.5 bg-surface-container text-[10px] font-bold font-label rounded-full uppercase tracking-widest text-on-surface-variant">
+                    Últimos 7 Días
+                </span>
+            </div>
+
+            <div class="h-56 flex items-end justify-between gap-3 px-1">
+                <div *ngFor="let bar of requestsByDay()"
+                    class="flex-1 rounded-t-lg relative group cursor-pointer transition-all"
+                    [class]="bar.is_peak
+                        ? 'bg-primary/20 border-t-4 border-primary'
+                        : 'bg-surface-container-low hover:bg-surface-container'"
+                    [style.height]="(bar.height_pct || 4) + '%'">
+                    <!-- Tooltip -->
+                    <div class="absolute -top-9 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100
+                                transition-opacity bg-primary text-on-primary text-[11px] font-bold font-label
+                                py-1 px-2.5 rounded-lg whitespace-nowrap pointer-events-none shadow-md">
+                        {{ bar.value }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-between mt-3 text-[10px] font-bold text-on-surface-variant font-label uppercase tracking-widest px-1">
+                <span *ngFor="let bar of requestsByDay()">{{ bar.day }}</span>
+            </div>
+        </div>
+
+        <!-- ── Donut chart: Distribución por tipo ── -->
+        <div class="lg:col-span-4 bg-surface-container-lowest rounded-xl p-6 ghost-shadow flex flex-col">
+            <h2 class="font-headline font-bold text-on-surface text-xl mb-0.5">Tipos de Servicio</h2>
+            <p class="text-sm text-on-surface-variant font-body mb-6">Distribución de solicitudes</p>
+
+            <div class="flex-1 flex items-center justify-center">
+                <div class="relative w-36 h-36">
+                    <svg viewBox="0 0 120 120" class="w-full h-full -rotate-90">
+                        <circle cx="60" cy="60" r="46" fill="none" stroke="#e2e8f0" stroke-width="16" />
+                        <circle *ngFor="let seg of getDonutSegments()"
+                            cx="60" cy="60" r="46" fill="none"
+                            [attr.stroke]="seg.color" stroke-width="16"
+                            [attr.stroke-dasharray]="getDonutDashArray(seg)"
+                            [attr.stroke-dashoffset]="seg.offset"
+                            stroke-linecap="round" />
+                    </svg>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center">
+                        <span class="font-headline font-extrabold text-2xl text-primary leading-none">{{ totalRequests }}</span>
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Total</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 space-y-3">
+                <div *ngFor="let item of requestsByType()" class="flex items-center justify-between text-sm">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full shrink-0" [style.background]="item.color"></span>
+                        <span class="text-on-surface-variant font-body">{{ item.label }}</span>
+                    </div>
+                    <span class="font-bold text-on-surface font-headline">{{ item.pct }}%</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ Second row ═══ -->
+    <section *ngIf="!loading()" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        <!-- ── Status breakdown ── -->
+        <div class="lg:col-span-4 bg-surface-container-lowest rounded-xl p-6 ghost-shadow">
+            <h2 class="font-headline font-bold text-on-surface text-xl mb-1">Estado de Solicitudes</h2>
+            <p class="text-sm text-on-surface-variant font-body mb-6">Desglose por estado actual</p>
+
+            <div class="space-y-4">
+                <div *ngFor="let s of requestsByStatus()" class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
+                        [style.background]="s.color + '20'">
+                        <span class="font-headline font-extrabold text-lg" [style.color]="s.color">{{ s.count }}</span>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm font-bold text-on-surface font-headline">{{ s.label }}</p>
+                        <div class="w-full h-1.5 rounded-full bg-surface-container-high mt-1">
+                            <div class="h-full rounded-full transition-all duration-500"
+                                [style.background]="s.color"
+                                [style.width.%]="summary().total_requests > 0 ? (s.count / summary().total_requests * 100) : 0">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Mechanic workload ── -->
+        <div class="lg:col-span-4 bg-surface-container-lowest rounded-xl p-6 ghost-shadow">
+            <h2 class="font-headline font-bold text-on-surface text-xl mb-1">Carga de Trabajo</h2>
+            <p class="text-sm text-on-surface-variant font-body mb-6">Solicitudes asignadas por mecánico</p>
+
+            <div *ngIf="mechanicWorkload().length === 0"
+                class="flex flex-col items-center justify-center py-8 text-center">
+                <span class="material-symbols-outlined text-on-surface-variant mb-2" style="font-size:36px;">person_off</span>
+                <p class="text-sm text-on-surface-variant font-body">Sin asignaciones aún</p>
+            </div>
+
+            <div class="space-y-4">
+                <div *ngFor="let mec of mechanicWorkload()" class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-lg machined-gradient flex items-center justify-center text-on-primary text-[10px] font-bold font-label shrink-0">
+                        {{ mec.initials }}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center justify-between mb-1">
+                            <p class="text-sm font-bold text-on-surface font-headline truncate">{{ mec.name }}</p>
+                            <span class="text-sm font-bold text-primary font-headline shrink-0 ml-2">{{ mec.assigned_count }}</span>
+                        </div>
+                        <div class="w-full h-1.5 rounded-full bg-surface-container-high">
+                            <div class="h-full rounded-full bg-primary transition-all duration-500"
+                                [style.width.%]="(mec.assigned_count / getMaxWorkload()) * 100">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Inventory by system ── -->
+        <div class="lg:col-span-4 bg-surface-container-lowest rounded-xl p-6 ghost-shadow">
+            <h2 class="font-headline font-bold text-on-surface text-xl mb-1">Inventario por Sistema</h2>
+            <p class="text-sm text-on-surface-variant font-body mb-6">Unidades en stock agrupadas</p>
+
+            <div *ngIf="inventoryBySystem().length === 0"
+                class="flex flex-col items-center justify-center py-8 text-center">
+                <span class="material-symbols-outlined text-on-surface-variant mb-2" style="font-size:36px;">inventory_2</span>
+                <p class="text-sm text-on-surface-variant font-body">Sin datos de inventario</p>
+            </div>
+
+            <div class="space-y-3">
+                <div *ngFor="let inv of inventoryBySystem()"
+                    class="flex items-center justify-between p-3 bg-surface-container-low rounded-lg">
+                    <div>
+                        <p class="text-sm font-bold text-on-surface font-headline">{{ inv.label }}</p>
+                        <p class="text-xs text-on-surface-variant font-body">{{ inv.item_count }} artículo(s)</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="font-headline font-extrabold text-lg text-primary">{{ inv.total_units }}</span>
+                        <p class="text-[10px] text-on-surface-variant font-label uppercase">Unidades</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
