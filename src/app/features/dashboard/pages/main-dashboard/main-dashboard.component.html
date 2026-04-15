@@ -5,11 +5,13 @@
 
         <div class="bg-surface-container-lowest rounded-xl p-6 ghost-shadow flex items-center justify-between">
             <div>
-                <p class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label mb-1">Active
-                    Jobs</p>
-                <h2 class="text-4xl font-headline font-extrabold text-primary">24</h2>
+                <p class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label mb-1">
+                    Trabajos Activos</p>
+                <h2 class="text-4xl font-headline font-extrabold text-primary">{{ summary().active_requests |
+                    number:'2.0-0' }}</h2>
                 <p class="text-xs text-emerald-600 font-semibold mt-1 flex items-center gap-1">
-                    <span class="material-symbols-outlined" style="font-size:13px;">trending_up</span>+4 from yesterday
+                    <span class="material-symbols-outlined" style="font-size:13px;">trending_up</span>De {{
+                    summary().total_requests }} totales
                 </p>
             </div>
             <div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center text-primary">
@@ -21,9 +23,11 @@
         <div class="bg-surface-container-lowest rounded-xl p-6 ghost-shadow flex items-center justify-between">
             <div>
                 <p class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label mb-1">
-                    Available Mechanics</p>
-                <h2 class="text-4xl font-headline font-extrabold text-primary">08</h2>
-                <p class="text-xs text-on-surface-variant font-semibold mt-1">Out of 12 total staff</p>
+                    Mecánicos Disponibles</p>
+                <h2 class="text-4xl font-headline font-extrabold text-primary">{{ summary().available_mechanics |
+                    number:'2.0-0' }}</h2>
+                <p class="text-xs text-on-surface-variant font-semibold mt-1">De {{ summary().total_mechanics }} total
+                    equipo</p>
             </div>
             <div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center text-primary">
                 <span class="material-symbols-outlined"
@@ -34,18 +38,13 @@
         <div
             class="bg-surface-container-lowest rounded-xl p-6 ghost-shadow flex items-center justify-between border-l-4 border-secondary">
             <div>
-                <p class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label mb-1">Avg
-                    Response Time</p>
-                <h2 class="text-4xl font-headline font-extrabold text-primary">18.4<span
-                        class="text-xl ml-1 font-semibold text-on-surface-variant">min</span></h2>
-                <p class="text-xs text-secondary font-bold mt-1 flex items-center gap-1">
-                    <span class="material-symbols-outlined"
-                        style="font-size:13px; font-variation-settings:'FILL' 1;">bolt</span>Target: 15.0 min
-                </p>
+                <p class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label mb-1">
+                    Trabajos Completados</p>
+                <h2 class="text-4xl font-headline font-extrabold text-primary">{{ summary().completed_requests }}</h2>
             </div>
             <div class="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center text-secondary">
                 <span class="material-symbols-outlined"
-                    style="font-size:24px; font-variation-settings:'FILL' 1;">timer</span>
+                    style="font-size:24px; font-variation-settings:'FILL' 1;">check_circle</span>
             </div>
         </div>
     </section>
@@ -53,49 +52,43 @@
     <!-- ── Live service requests ── -->
     <section>
         <div class="flex items-end justify-between mb-5">
-            <div>
-                <h2 class="font-headline font-bold text-2xl text-on-surface">Live Service Requests</h2>
-                <p class="text-sm text-on-surface-variant mt-0.5">Real-time roadside dispatch queue</p>
-            </div>
+            <h2 class="font-headline font-bold text-2xl text-on-surface">Últimas Solicitudes</h2>
             <div class="flex gap-2">
-                <button
-                    class="px-4 py-2 bg-surface-container-high text-primary rounded-full text-xs font-bold font-label">All
-                    Requests</button>
-                <button
-                    class="px-4 py-2 bg-surface-container text-on-surface-variant rounded-full text-xs font-bold font-label hover:bg-surface-container-high transition-colors">Nearby
-                    (5mi)</button>
+                <button [routerLink]="['/dashboard/service-requests']"
+                    class="px-4 py-2 bg-surface-container text-on-surface-variant rounded-full text-xs font-bold font-label hover:bg-surface-container-high transition-colors">
+                    Ver Todo
+                </button>
             </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-            <div *ngFor="let req of requests"
+            <div *ngFor="let req of requests()"
                 class="bg-surface-container-lowest rounded-xl overflow-hidden ghost-shadow">
-                <!-- Map placeholder -->
-                <div class="h-36 relative" [style.background]="req.gradient">
+                <!-- Banner gradient -->
+                <div class="h-36 relative" [style.background]="getGradient(req.priority)">
                     <div class="absolute top-3 left-3 flex gap-2">
                         <span class="text-[10px] font-bold uppercase px-2 py-1 rounded font-label" [ngClass]="{
-                    'bg-tertiary-container text-on-tertiary-container': req.urgency === 'high',
-                    'bg-secondary/80 text-on-secondary': req.urgency === 'med',
-                    'bg-surface-container-highest text-on-surface-variant': req.urgency === 'low'
-                  }">
-                            <span *ngIf="req.urgency==='high'">⚠ HIGH URGENCY</span>
-                            <span *ngIf="req.urgency==='med'">MED URGENCY</span>
-                            <span *ngIf="req.urgency==='low'">LOW URGENCY</span>
+                            'bg-tertiary-container text-on-tertiary-container': req.priority === 'alta',
+                            'bg-secondary/80 text-on-secondary': req.priority === 'media',
+                            'bg-surface-container-highest text-on-surface-variant': req.priority === 'baja'
+                        }">
+                            {{ getUrgencyLabel(req.priority) }}
                         </span>
                         <span
                             class="text-[10px] font-bold uppercase px-2 py-1 rounded bg-surface-container-highest text-on-surface font-label">
-                            {{ req.status }}
+                            {{ getStatusLabel(req.status) }}
                         </span>
                     </div>
                 </div>
 
                 <div class="p-5">
                     <div class="flex items-start justify-between mb-1">
-                        <h3 class="font-headline font-bold text-on-surface text-base">{{ req.name }}</h3>
-                        <span class="text-[11px] text-on-surface-variant font-label">{{ req.time }}</span>
+                        <h3 class="font-headline font-bold text-on-surface text-base">{{ req.client_name }}</h3>
+                        <span class="text-[11px] text-on-surface-variant font-label">{{ timeAgo(req.created_at)
+                            }}</span>
                     </div>
                     <p class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant mb-3 font-label">{{
-                        req.service }}</p>
+                        req.service_type_label }}</p>
 
                     <div class="space-y-1.5 mb-4">
                         <p class="text-xs text-on-surface-variant flex items-center gap-2">
@@ -103,25 +96,39 @@
                             req.location }}
                         </p>
                         <p class="text-xs text-on-surface-variant flex items-center gap-2">
-                            <span class="material-symbols-outlined" style="font-size:14px;">{{ req.urgency === 'high' ?
-                                'directions_car' : 'person' }}</span>{{ req.detail }}
+                            <span class="material-symbols-outlined" style="font-size:14px;">{{ req.priority === 'alta' ?
+                                'directions_car' : 'person' }}</span>{{ req.vehicle_info }}
+                        </p>
+                        <p *ngIf="req.assigned_mechanic"
+                            class="text-xs text-primary flex items-center gap-2 mt-2 font-bold">
+                            <span class="material-symbols-outlined" style="font-size:14px;">build</span>{{
+                            req.assigned_mechanic }}
                         </p>
                     </div>
 
-                    <div *ngIf="req.urgency === 'high'" class="flex gap-2">
-                        <button
-                            class="flex-1 machined-gradient text-on-primary text-xs font-bold rounded-lg py-2.5 font-label active:scale-[0.98] transition-transform">Accept
-                            Job</button>
-                        <button
-                            class="px-4 text-xs font-bold rounded-lg py-2.5 bg-surface-container text-on-surface font-label hover:bg-surface-container-high transition-colors">Reject</button>
+                    <div *ngIf="req.status === 'PENDIENTE'" class="flex gap-2 mt-auto">
+                        <button (click)="openAssignModal(req)"
+                            class="flex-1 machined-gradient text-on-primary text-xs font-bold rounded-lg py-2.5 font-label active:scale-[0.98] transition-transform">
+                            Aceptar Trabajo
+                        </button>
+                        <button (click)="onRejectJob(req)"
+                            class="px-4 text-xs font-bold rounded-lg py-2.5 bg-surface-container text-on-surface font-label hover:bg-surface-container-high transition-colors">
+                            Rechazar
+                        </button>
                     </div>
-                    <button *ngIf="req.urgency !== 'high'" class="w-full bg-surface-container-low text-primary text-xs font-bold rounded-lg py-2.5 font-label
-                       flex items-center justify-center gap-2 hover:bg-surface-container transition-colors">
-                        <span class="material-symbols-outlined" style="font-size:14px;">{{ req.urgency === 'med' ?
-                            'visibility' : 'history' }}</span>
-                        {{ req.urgency === 'med' ? 'View Details' : 'Job Log' }}
+
+                    <button *ngIf="req.status !== 'PENDIENTE'"
+                        class="w-full bg-surface-container-low text-primary text-xs font-bold rounded-lg py-2.5 font-label flex items-center justify-center gap-2 hover:bg-surface-container transition-colors"
+                        [routerLink]="['/dashboard/service-requests']">
+                        <span class="material-symbols-outlined" style="font-size:14px;">visibility</span>
+                        Ver Detalles
                     </button>
                 </div>
+            </div>
+
+            <div *ngIf="requests().length === 0"
+                class="col-span-3 bg-surface-container-lowest rounded-xl p-8 text-center text-on-surface-variant font-bold text-sm ghost-shadow">
+                No hay solicitudes recientes en el sistema.
             </div>
         </div>
     </section>
@@ -132,41 +139,41 @@
         <!-- Technician status table -->
         <div class="lg:col-span-2 bg-surface-container-lowest rounded-xl ghost-shadow overflow-hidden">
             <div class="flex items-center justify-between px-6 py-5">
-                <h3 class="font-headline font-bold text-on-surface text-lg">Technician Status</h3>
-                <button class="text-xs font-bold text-primary font-label hover:underline">View All Fleet</button>
+                <h3 class="font-headline font-bold text-on-surface text-lg">Estado de Técnicos</h3>
+                <button [routerLink]="['/dashboard/staff']"
+                    class="text-xs font-bold text-primary font-label hover:underline">Ver Toda La Flota</button>
             </div>
 
             <div
                 class="grid grid-cols-4 px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant font-label">
-                <span>Technician</span><span>Specialty</span><span>Status</span><span
-                    class="text-right">Throughput</span>
+                <span class="col-span-2">Técnico</span><span>Especialidad</span><span class="text-right">Estado</span>
             </div>
 
             <div class="space-y-1 px-2 pb-4">
-                <div *ngFor="let tech of technicians"
+                <div *ngFor="let tech of technicians()"
                     class="grid grid-cols-4 items-center px-4 py-3 rounded-lg bg-surface-container-lowest hover:bg-surface-container-high transition-colors">
-                    <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs text-on-primary font-label shrink-0"
-                            [style.background]="tech.color">{{ tech.initials }}</div>
+                    <div class="col-span-2 flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs text-on-primary font-label shrink-0 uppercase"
+                            [style.background]="tech.avatar_color">
+                            {{ tech.full_name | slice:0:2 }}
+                        </div>
                         <div>
-                            <p class="font-bold text-on-surface text-sm font-headline leading-tight">{{ tech.name }}</p>
-                            <p class="text-[10px] text-on-surface-variant">{{ tech.unit }}</p>
+                            <p class="font-bold text-on-surface text-sm font-headline leading-tight">{{ tech.full_name
+                                }}</p>
+                            <p class="text-[10px] text-on-surface-variant">{{ tech.phone }}</p>
                         </div>
                     </div>
-                    <span class="text-sm text-on-surface-variant font-body">{{ tech.specialty }}</span>
-                    <span class="text-[11px] font-bold font-label flex items-center gap-1.5" [ngClass]="{
-                  'text-emerald-600': tech.status === 'AVAILABLE',
-                  'text-secondary': tech.status === 'ON-SITE',
-                  'text-blue-500': tech.status === 'RETURNING'
-                }">
+                    <span class="text-sm text-on-surface-variant font-body capitalize">{{ tech.specialty }}</span>
+                    <span class="text-[11px] font-bold font-label flex items-center justify-end gap-1.5" [ngClass]="{
+                        'text-emerald-600': tech.is_available,
+                        'text-secondary': !tech.is_available
+                    }">
                         <span class="w-1.5 h-1.5 rounded-full inline-block" [ngClass]="{
-                    'bg-emerald-500': tech.status === 'AVAILABLE',
-                    'bg-secondary': tech.status === 'ON-SITE',
-                    'bg-blue-400': tech.status === 'RETURNING'
-                  }"></span>
-                        {{ tech.status }}
+                            'bg-emerald-500': tech.is_available,
+                            'bg-secondary': !tech.is_available
+                        }"></span>
+                        {{ tech.is_available ? 'Disponible' : 'No disponible' }}
                     </span>
-                    <span class="text-sm font-bold text-on-surface font-headline text-right">{{ tech.jobs }} Jobs</span>
                 </div>
             </div>
         </div>
@@ -176,30 +183,71 @@
             <div class="flex items-center gap-3">
                 <span class="material-symbols-outlined text-secondary"
                     style="font-size:22px; font-variation-settings:'FILL' 1;">inventory_2</span>
-                <h3 class="font-headline font-bold text-on-primary text-lg">Inventory Watch</h3>
+                <h3 class="font-headline font-bold text-on-primary text-lg">Vigilancia de Inventario</h3>
             </div>
 
-            <div *ngFor="let item of inventoryAlerts" class="space-y-2">
+            <div *ngFor="let item of inventoryAlerts()" class="space-y-2">
                 <div class="flex items-center justify-between">
                     <span class="text-[10px] uppercase tracking-widest text-on-primary/50 font-label font-bold">{{
                         item.name }}</span>
-                    <span class="text-[10px] font-bold font-label"
-                        [class]="item.critical ? 'text-on-tertiary-container' : 'text-emerald-400'">
-                        {{ item.status }}
+                    <span class="text-[10px] font-bold font-label text-on-tertiary-container">
+                        Crítico ({{ item.quantity }} left)
                     </span>
                 </div>
                 <div class="h-1.5 rounded-full bg-white/10 overflow-hidden">
-                    <div class="h-full rounded-full transition-all" [style.width]="item.pct"
-                        [class]="item.critical ? 'bg-secondary-container' : 'bg-emerald-500'"></div>
+                    <div class="h-full rounded-full transition-all bg-secondary-container"
+                        [style.width.%]="(item.quantity / item.min_stock) * 100"></div>
                 </div>
-                <p class="text-[11px] text-on-primary/40 font-body">{{ item.note }}</p>
+                <p class="text-[11px] text-on-primary/40 font-body">SKU: {{ item.sku }} | Min: {{ item.min_stock }}</p>
             </div>
 
-            <button class="mt-auto w-full bg-white/10 hover:bg-white/15 text-on-primary font-bold text-sm
+            <div *ngIf="inventoryAlerts().length === 0" class="text-sm text-emerald-400 font-bold">
+                Todo el inventario está estable.
+            </div>
+
+            <button [routerLink]="['/dashboard/inventory']" class="mt-auto w-full bg-white/10 hover:bg-white/15 text-on-primary font-bold text-sm
                          rounded-lg py-3 font-label transition-colors flex items-center justify-center gap-2">
-                <span class="material-symbols-outlined" style="font-size:16px;">open_in_full</span>
-                Full Inventory Management
+                Gestión de Inventario
             </button>
         </div>
     </section>
+</div>
+
+<!-- Modal: Asignar Mecánico -->
+<div *ngIf="showAssignModal()" class="fixed inset-0 z-[100] flex items-center justify-center p-4"
+    (click)="closeAssignModal()">
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+
+    <div class="relative bg-surface-container-lowest rounded-2xl ghost-shadow w-full max-w-sm"
+        (click)="$event.stopPropagation()">
+
+        <div class="p-6">
+            <h2 class="font-headline font-bold text-on-surface text-lg mb-1">Asignar Mecánico</h2>
+            <p class="text-sm text-on-surface-variant font-body mb-5">
+                Solicitud <span class="font-bold text-primary font-mono">{{ assignTarget()?.code }}</span>
+                — {{ assignTarget()?.service_type_label }}
+            </p>
+
+            <div class="flex flex-col gap-1.5 mb-6">
+                <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">
+                    Nombre del Mecánico <span class="text-secondary">*</span>
+                </label>
+                <input type="text" [ngModel]="assignMechanicName()" (ngModelChange)="assignMechanicName.set($event)"
+                    placeholder="Ej: Carlos Rodríguez" (keydown.enter)="onAssignSubmit()"
+                    class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body
+                           focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface" />
+            </div>
+
+            <div class="flex items-center justify-end gap-3">
+                <button (click)="closeAssignModal()"
+                    class="px-4 py-2 text-sm font-bold font-label text-on-surface-variant hover:bg-surface-container rounded-lg transition-colors">
+                    Cancelar
+                </button>
+                <button (click)="onAssignSubmit()" class="machined-gradient text-on-primary px-5 py-2 rounded-lg text-sm font-bold font-label
+                           ghost-shadow active:scale-[0.98] transition-transform">
+                    Asignar
+                </button>
+            </div>
+        </div>
+    </div>
 </div>

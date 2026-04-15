@@ -12,7 +12,7 @@ export type ServiceType =
   | 'transmission'
   | 'general';
 
-export type Status = 'PENDIENTE' | 'EN_PROGRESO' | 'CRITICO' | 'COMPLETADO';
+export type Status = 'PENDIENTE' | 'EN_PROGRESO' | 'CRITICO' | 'COMPLETADO' | 'RECHAZADO';
 
 export type Priority = 'alta' | 'media' | 'baja';
 
@@ -88,6 +88,7 @@ export const STATUS_OPTIONS: { value: Status; label: string }[] = [
   { value: 'EN_PROGRESO', label: 'En Progreso' },
   { value: 'CRITICO', label: 'Crítico' },
   { value: 'COMPLETADO', label: 'Completado' },
+  { value: 'RECHAZADO', label: 'Rechazado' },
 ];
 
 export const PRIORITY_OPTIONS: { value: Priority; label: string }[] = [

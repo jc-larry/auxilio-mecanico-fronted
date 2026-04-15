@@ -4,7 +4,7 @@
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
             <h1 class="font-headline font-extrabold text-on-surface text-3xl">Inventario</h1>
-            <p class="text-on-surface-variant mt-1 text-sm font-body">Repuestos y componentes del taller de auxilio mecánico</p>
+            <p class="text-on-surface-variant mt-1 text-sm font-body">Repuestos y componentes del taller</p>
         </div>
         <div class="flex items-center gap-3">
             <!-- Critical filter -->
@@ -17,8 +17,7 @@
                 {{ criticalFilter() ? 'Mostrando Críticos' : 'Solo Críticos' }}
             </button>
             <!-- Add button -->
-            <button (click)="openCreateModal()"
-                class="machined-gradient text-on-primary px-4 py-2.5 rounded-lg text-sm font-bold font-label
+            <button (click)="openCreateModal()" class="machined-gradient text-on-primary px-4 py-2.5 rounded-lg text-sm font-bold font-label
                        flex items-center gap-2 ghost-shadow active:scale-[0.98] transition-transform">
                 <span class="material-symbols-outlined" style="font-size:16px;">add</span>
                 Agregar Pieza
@@ -29,17 +28,20 @@
     <!-- Stats cards -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div class="bg-surface-container-lowest rounded-xl p-5 ghost-shadow">
-            <p class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label mb-2">Total Artículos</p>
+            <p class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label mb-2">Total
+                Artículos</p>
             <span class="font-headline font-extrabold text-3xl text-on-surface">{{ stats().total_items }}</span>
         </div>
         <div class="bg-surface-container-lowest rounded-xl p-5 ghost-shadow">
-            <p class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label mb-2">Unidades en Stock</p>
+            <p class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label mb-2">Unidades
+                en Stock</p>
             <span class="font-headline font-extrabold text-3xl text-on-surface">{{ stats().total_units }}</span>
         </div>
         <div class="bg-surface-container-lowest rounded-xl p-5 ghost-shadow"
             [class]="stats().critical_count > 0 ? 'bg-tertiary-container' : 'bg-surface-container-lowest'">
             <p class="text-[11px] font-bold uppercase tracking-wider font-label mb-2"
-                [class]="stats().critical_count > 0 ? 'text-on-tertiary-container/70' : 'text-on-surface-variant'">Stock Crítico</p>
+                [class]="stats().critical_count > 0 ? 'text-on-tertiary-container/70' : 'text-on-surface-variant'">Stock
+                Crítico</p>
             <div class="flex items-center justify-between">
                 <span class="font-headline font-extrabold text-3xl"
                     [class]="stats().critical_count > 0 ? 'text-on-tertiary-container' : 'text-on-surface'">
@@ -51,8 +53,10 @@
             </div>
         </div>
         <div class="bg-surface-container-lowest rounded-xl p-5 ghost-shadow">
-            <p class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label mb-2">Valor Total</p>
-            <span class="font-headline font-extrabold text-3xl text-on-surface">{{ formatTotalValue(stats().total_value) }}</span>
+            <p class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label mb-2">Valor
+                Total</p>
+            <span class="font-headline font-extrabold text-3xl text-on-surface">{{ formatTotalValue(stats().total_value)
+                }}</span>
         </div>
     </div>
 
@@ -69,8 +73,7 @@
         <p class="text-on-surface-variant text-sm font-body mb-6">
             {{ criticalFilter() ? 'No hay artículos en nivel crítico.' : 'Agrega piezas al inventario para comenzar.' }}
         </p>
-        <button *ngIf="!criticalFilter()" (click)="openCreateModal()"
-            class="machined-gradient text-on-primary px-6 py-3 rounded-lg text-sm font-bold font-label
+        <button *ngIf="!criticalFilter()" (click)="openCreateModal()" class="machined-gradient text-on-primary px-6 py-3 rounded-lg text-sm font-bold font-label
                    flex items-center gap-2 ghost-shadow active:scale-[0.98] transition-transform">
             <span class="material-symbols-outlined" style="font-size:18px;">add</span>
             Agregar Primera Pieza
@@ -81,7 +84,8 @@
     <section *ngIf="!loading() && items().length > 0">
         <div class="bg-surface-container-low rounded-xl overflow-hidden p-1">
             <!-- Column headers -->
-            <div class="grid grid-cols-12 gap-1 px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest font-label">
+            <div
+                class="grid grid-cols-12 gap-1 px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest font-label">
                 <span class="col-span-4">Nombre de la Pieza</span>
                 <span class="col-span-2 text-center">SKU</span>
                 <span class="col-span-2 text-center">Precio</span>
@@ -91,8 +95,7 @@
 
             <!-- Rows -->
             <div class="space-y-1">
-                <div *ngFor="let part of items()"
-                    class="grid grid-cols-12 items-center gap-1 px-6 py-4 bg-surface-container-lowest
+                <div *ngFor="let part of items()" class="grid grid-cols-12 items-center gap-1 px-6 py-4 bg-surface-container-lowest
                            hover:bg-surface-container-high transition-colors rounded-lg group">
 
                     <!-- Name -->
@@ -116,7 +119,8 @@
                     <div class="col-span-2 text-center font-mono text-sm text-on-surface-variant">{{ part.sku }}</div>
 
                     <!-- Price -->
-                    <div class="col-span-2 text-center font-bold text-on-surface font-headline">{{ formatPrice(part.unit_price) }}</div>
+                    <div class="col-span-2 text-center font-bold text-on-surface font-headline">{{
+                        formatPrice(part.unit_price) }}</div>
 
                     <!-- Qty -->
                     <div class="col-span-2 text-center">
@@ -135,14 +139,12 @@
 
                     <!-- Actions -->
                     <div class="col-span-2 flex items-center justify-end gap-2">
-                        <button *ngIf="part.is_critical"
-                            (click)="openRestockModal(part); $event.stopPropagation()"
+                        <button *ngIf="part.is_critical" (click)="openRestockModal(part); $event.stopPropagation()"
                             class="bg-secondary text-on-secondary px-4 py-1.5 rounded-lg text-xs font-bold font-label
                                    hover:scale-[1.02] transition-transform">
                             Reabastecer
                         </button>
-                        <button *ngIf="!part.is_critical"
-                            (click)="openRestockModal(part); $event.stopPropagation()"
+                        <button *ngIf="!part.is_critical" (click)="openRestockModal(part); $event.stopPropagation()"
                             class="text-primary font-bold text-xs font-label hover:underline opacity-0 group-hover:opacity-100 transition-opacity">
                             +Stock
                         </button>
@@ -187,8 +189,7 @@
 <!-- ═══════════════════════════════════════════════════════ -->
 <!-- ── Modal: Agregar Pieza ── -->
 <!-- ═══════════════════════════════════════════════════════ -->
-<div *ngIf="showCreateModal()"
-    class="fixed inset-0 z-[100] flex items-center justify-center p-4"
+<div *ngIf="showCreateModal()" class="fixed inset-0 z-[100] flex items-center justify-center p-4"
     (click)="closeCreateModal()">
     <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
     <div class="relative bg-surface-container-lowest rounded-2xl ghost-shadow w-full max-w-lg max-h-[90vh] overflow-y-auto"
@@ -197,9 +198,11 @@
         <div class="flex items-center justify-between p-6 border-b border-outline-variant/10">
             <div>
                 <h2 class="font-headline font-bold text-on-surface text-xl">Agregar Pieza</h2>
-                <p class="text-sm text-on-surface-variant font-body mt-0.5">Registrar un nuevo artículo en el inventario</p>
+                <p class="text-sm text-on-surface-variant font-body mt-0.5">Registrar un nuevo artículo en el inventario
+                </p>
             </div>
-            <button (click)="closeCreateModal()" class="p-2 text-on-surface-variant hover:bg-surface-container rounded-lg transition-colors">
+            <button (click)="closeCreateModal()"
+                class="p-2 text-on-surface-variant hover:bg-surface-container rounded-lg transition-colors">
                 <span class="material-symbols-outlined" style="font-size:20px;">close</span>
             </button>
         </div>
@@ -224,8 +227,10 @@
                         class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body font-mono focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface" />
                 </div>
                 <div class="flex flex-col gap-1.5">
-                    <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Sistema</label>
-                    <select [ngModel]="newItem().system_category" (ngModelChange)="updateCreateField('system_category', $event)"
+                    <label
+                        class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Sistema</label>
+                    <select [ngModel]="newItem().system_category"
+                        (ngModelChange)="updateCreateField('system_category', $event)"
                         class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface appearance-none">
                         <option *ngFor="let opt of categoryOptions" [value]="opt.value">{{ opt.label }}</option>
                     </select>
@@ -234,18 +239,26 @@
 
             <div class="grid grid-cols-3 gap-4">
                 <div class="flex flex-col gap-1.5">
-                    <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Cantidad</label>
-                    <input type="number" [ngModel]="newItem().quantity" (ngModelChange)="updateCreateField('quantity', +$event)"
+                    <label
+                        class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Cantidad</label>
+                    <input type="number" [ngModel]="newItem().quantity"
+                        (ngModelChange)="updateCreateField('quantity', +$event)"
                         class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface" />
                 </div>
                 <div class="flex flex-col gap-1.5">
-                    <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Stock Mínimo</label>
-                    <input type="number" [ngModel]="newItem().min_stock" (ngModelChange)="updateCreateField('min_stock', +$event)"
+                    <label
+                        class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Stock
+                        Mínimo</label>
+                    <input type="number" [ngModel]="newItem().min_stock"
+                        (ngModelChange)="updateCreateField('min_stock', +$event)"
                         class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface" />
                 </div>
                 <div class="flex flex-col gap-1.5">
-                    <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Precio ($)</label>
-                    <input type="number" step="0.01" [ngModel]="newItem().unit_price" (ngModelChange)="updateCreateField('unit_price', +$event)"
+                    <label
+                        class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Precio
+                        ($)</label>
+                    <input type="number" step="0.01" [ngModel]="newItem().unit_price"
+                        (ngModelChange)="updateCreateField('unit_price', +$event)"
                         class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface" />
                 </div>
             </div>
@@ -259,7 +272,8 @@
             <button (click)="onCreateSubmit()" [disabled]="creating()"
                 class="machined-gradient text-on-primary px-6 py-2.5 rounded-lg text-sm font-bold font-label
                        ghost-shadow active:scale-[0.98] transition-transform disabled:opacity-50 flex items-center gap-2">
-                <span *ngIf="creating()" class="material-symbols-outlined animate-spin" style="font-size:16px;">progress_activity</span>
+                <span *ngIf="creating()" class="material-symbols-outlined animate-spin"
+                    style="font-size:16px;">progress_activity</span>
                 {{ creating() ? 'Agregando...' : 'Agregar al Inventario' }}
             </button>
         </div>
@@ -270,8 +284,7 @@
 <!-- ═══════════════════════════════════════════════════════ -->
 <!-- ── Modal: Editar Pieza ── -->
 <!-- ═══════════════════════════════════════════════════════ -->
-<div *ngIf="showEditModal()"
-    class="fixed inset-0 z-[100] flex items-center justify-center p-4"
+<div *ngIf="showEditModal()" class="fixed inset-0 z-[100] flex items-center justify-center p-4"
     (click)="closeEditModal()">
     <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
     <div class="relative bg-surface-container-lowest rounded-2xl ghost-shadow w-full max-w-lg max-h-[90vh] overflow-y-auto"
@@ -282,38 +295,50 @@
                 <h2 class="font-headline font-bold text-on-surface text-lg">Editar Pieza</h2>
                 <p class="text-xs text-on-surface-variant font-mono">{{ editTarget()?.sku }}</p>
             </div>
-            <button (click)="closeEditModal()" class="p-2 text-on-surface-variant hover:bg-surface-container rounded-lg transition-colors">
+            <button (click)="closeEditModal()"
+                class="p-2 text-on-surface-variant hover:bg-surface-container rounded-lg transition-colors">
                 <span class="material-symbols-outlined" style="font-size:20px;">close</span>
             </button>
         </div>
 
         <div class="p-6 space-y-5">
             <div class="flex flex-col gap-1.5">
-                <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Nombre</label>
+                <label
+                    class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Nombre</label>
                 <input type="text" [ngModel]="editForm().name" (ngModelChange)="updateEditField('name', $event)"
                     class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface" />
             </div>
             <div class="flex flex-col gap-1.5">
-                <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Sistema</label>
-                <select [ngModel]="editForm().system_category" (ngModelChange)="updateEditField('system_category', $event)"
+                <label
+                    class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Sistema</label>
+                <select [ngModel]="editForm().system_category"
+                    (ngModelChange)="updateEditField('system_category', $event)"
                     class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface appearance-none">
                     <option *ngFor="let opt of categoryOptions" [value]="opt.value">{{ opt.label }}</option>
                 </select>
             </div>
             <div class="grid grid-cols-3 gap-4">
                 <div class="flex flex-col gap-1.5">
-                    <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Cantidad</label>
-                    <input type="number" [ngModel]="editForm().quantity" (ngModelChange)="updateEditField('quantity', +$event)"
+                    <label
+                        class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Cantidad</label>
+                    <input type="number" [ngModel]="editForm().quantity"
+                        (ngModelChange)="updateEditField('quantity', +$event)"
                         class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface" />
                 </div>
                 <div class="flex flex-col gap-1.5">
-                    <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Stock Mín.</label>
-                    <input type="number" [ngModel]="editForm().min_stock" (ngModelChange)="updateEditField('min_stock', +$event)"
+                    <label
+                        class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Stock
+                        Mín.</label>
+                    <input type="number" [ngModel]="editForm().min_stock"
+                        (ngModelChange)="updateEditField('min_stock', +$event)"
                         class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface" />
                 </div>
                 <div class="flex flex-col gap-1.5">
-                    <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Precio ($)</label>
-                    <input type="number" step="0.01" [ngModel]="editForm().unit_price" (ngModelChange)="updateEditField('unit_price', +$event)"
+                    <label
+                        class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Precio
+                        ($)</label>
+                    <input type="number" step="0.01" [ngModel]="editForm().unit_price"
+                        (ngModelChange)="updateEditField('unit_price', +$event)"
                         class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface" />
                 </div>
             </div>
@@ -334,8 +359,7 @@
 <!-- ═══════════════════════════════════════════════════════ -->
 <!-- ── Modal: Reabastecer ── -->
 <!-- ═══════════════════════════════════════════════════════ -->
-<div *ngIf="showRestockModal()"
-    class="fixed inset-0 z-[100] flex items-center justify-center p-4"
+<div *ngIf="showRestockModal()" class="fixed inset-0 z-[100] flex items-center justify-center p-4"
     (click)="closeRestockModal()">
     <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
     <div class="relative bg-surface-container-lowest rounded-2xl ghost-shadow w-full max-w-sm"
@@ -355,8 +379,8 @@
                 <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">
                     Unidades a agregar <span class="text-secondary">*</span>
                 </label>
-                <input type="number" [ngModel]="restockQty()" (ngModelChange)="restockQty.set(+$event)"
-                    min="1" (keydown.enter)="onRestockSubmit()"
+                <input type="number" [ngModel]="restockQty()" (ngModelChange)="restockQty.set(+$event)" min="1"
+                    (keydown.enter)="onRestockSubmit()"
                     class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface" />
             </div>
 
