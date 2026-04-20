@@ -1,0 +1,298 @@
+<div class="p-8 max-w-7xl mx-auto font-body">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <div>
+            <h1 class="text-3xl font-headline font-bold text-on-surface tracking-tight mb-1">Usuarios del Sistema</h1>
+            <p class="text-on-surface-variant font-label text-sm max-w-xl">
+                Administra los accesos, información y roles del personal y clientes de la plataforma.
+            </p>
+        </div>
+        <div class="flex items-center gap-3">
+            <button (click)="loadUsers()"
+                class="h-10 w-10 flex items-center justify-center rounded-lg border border-outline-variant/30 text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors">
+                <span class="material-symbols-outlined" style="font-size:20px;">refresh</span>
+            </button>
+            <button (click)="openCreateModal()"
+                class="h-10 px-5 machined-gradient text-on-primary rounded-lg font-headline font-semibold text-sm flex items-center gap-2 hover:shadow-md transition-all active:scale-[0.98]">
+                <span class="material-symbols-outlined" style="font-size:20px;">person_add</span>
+                Nuevo Usuario
+            </button>
+        </div>
+    </div>
+
+    <!-- Table Section -->
+    <div class="bg-surface rounded-2xl border border-outline-variant/20 shadow-sm overflow-hidden mb-6">
+        <div
+            class="p-5 border-b border-outline-variant/10 flex justify-between items-center bg-surface-container-lowest">
+            <h2 class="font-headline font-bold text-on-surface">Directorio</h2>
+            <span class="px-3 py-1 bg-primary/10 text-primary text-xs font-bold rounded-full font-label tracking-wide">
+                {{ totalItems() }} Registros
+            </span>
+        </div>
+
+        <div class="overflow-x-auto min-h-[400px]">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-surface-container-low/50">
+                        <th
+                            class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/20">
+                            Usuario</th>
+                        <th
+                            class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/20">
+                            Email</th>
+                        <th
+                            class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/20">
+                            Roles</th>
+                        <th
+                            class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/20">
+                            Estado</th>
+                        <th
+                            class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/20 text-right">
+                            Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngIf="loading()">
+                        <td colspan="5" class="py-12 text-center text-on-surface-variant">
+                            <span class="material-symbols-outlined animate-spin"
+                                style="font-size: 32px;">progress_activity</span>
+                            <p class="mt-2 text-sm">Cargando directorio...</p>
+                        </td>
+                    </tr>
+                    <tr *ngIf="!loading() && users().length === 0">
+                        <td colspan="5" class="py-12 text-center text-on-surface-variant">
+                            <span class="material-symbols-outlined mb-2"
+                                style="font-size: 32px; opacity: 0.5;">group_off</span>
+                            <p class="text-sm">No se encontraron usuarios</p>
+                        </td>
+                    </tr>
+                    <tr *ngFor="let u of users()"
+                        class="group hover:bg-surface-container-lowest/50 transition-colors border-b border-outline-variant/10 last:border-0">
+                        <td class="py-4 px-5">
+                            <div class="flex items-center gap-3">
+                                <div
+                                    class="w-10 h-10 rounded-full machined-gradient flex items-center justify-center text-on-primary font-headline font-bold text-sm shadow-sm shrink-0">
+                                    {{ u.full_name.charAt(0).toUpperCase() }}
+                                </div>
+                                <div>
+                                    <p class="font-headline font-bold text-sm text-on-surface">{{ u.full_name }}</p>
+                                    <p class="text-xs text-on-surface-variant">{{"@" + u.username }}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="py-4 px-5">
+                            <p class="text-sm text-on-surface-variant">{{ u.email }}</p>
+                        </td>
+                        <td class="py-4 px-5">
+                            <div class="flex flex-wrap gap-1">
+                                <span *ngFor="let role of u.roles"
+                                    class="px-2 py-0.5 bg-secondary/10 text-secondary border border-secondary/20 rounded text-[10px] font-bold tracking-wide uppercase">
+                                    {{ role }}
+                                </span>
+                                <span *ngIf="!u.roles || u.roles.length === 0" class="text-xs text-outline italic">
+                                    Sin rol
+                                </span>
+                            </div>
+                        </td>
+                        <td class="py-4 px-5">
+                            <span
+                                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold font-label tracking-wide"
+                                [ngClass]="u.is_active ? 'bg-emerald-500/10 text-emerald-600' : 'bg-red-500/10 text-red-600'">
+                                <span class="w-1.5 h-1.5 rounded-full"
+                                    [ngClass]="u.is_active ? 'bg-emerald-500' : 'bg-red-500'"></span>
+                                {{ u.is_active ? 'Activo' : 'Inactivo' }}
+                            </span>
+                        </td>
+                        <td class="py-4 px-5 text-right">
+                            <div
+                                class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button (click)="openEditModal(u)"
+                                    class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-surface-container text-on-surface-variant hover:text-primary transition-colors"
+                                    title="Editar">
+                                    <span class="material-symbols-outlined" style="font-size: 18px;">edit</span>
+                                </button>
+                                <button *ngIf="currentUser()?.id !== u.id" (click)="onDelete(u)"
+                                    class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-red-500/10 text-on-surface-variant hover:text-red-500 transition-colors"
+                                    title="Desactivar">
+                                    <span class="material-symbols-outlined" style="font-size: 18px;">{{ u.is_active ?
+                                        'block' : 'delete' }}</span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div
+            class="p-4 border-t border-outline-variant/10 flex items-center justify-between bg-surface-container-lowest">
+            <p class="text-xs text-on-surface-variant font-label">
+                Página {{ currentPage() }} de {{ totalPages() }}
+            </p>
+            <div class="flex gap-1">
+                <button [disabled]="currentPage() === 1" (click)="onPageChange(currentPage() - 1)"
+                    class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant/30 text-on-surface hover:bg-surface-container disabled:opacity-50 disabled:hover:bg-transparent transition-colors">
+                    <span class="material-symbols-outlined" style="font-size:18px;">chevron_left</span>
+                </button>
+                <ng-container *ngFor="let p of pages()">
+                    <button *ngIf="p === 1 || p === totalPages() || (p >= currentPage() - 1 && p <= currentPage() + 1)"
+                        (click)="onPageChange(p)"
+                        class="w-8 h-8 flex items-center justify-center rounded font-label text-sm transition-colors"
+                        [ngClass]="p === currentPage() ? 'machined-gradient text-on-primary font-bold border-transparent' : 'border border-outline-variant/30 text-on-surface hover:bg-surface-container'">
+                        {{ p }}
+                    </button>
+                    <span *ngIf="p === currentPage() - 2 && p > 1 || p === currentPage() + 2 && p < totalPages()"
+                        class="w-8 h-8 flex items-center justify-center text-on-surface-variant">...</span>
+                </ng-container>
+                <button [disabled]="currentPage() === totalPages()" (click)="onPageChange(currentPage() + 1)"
+                    class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant/30 text-on-surface hover:bg-surface-container disabled:opacity-50 disabled:hover:bg-transparent transition-colors">
+                    <span class="material-symbols-outlined" style="font-size:18px;">chevron_right</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Modal -->
+<div *ngIf="showCreateModal()" class="fixed inset-0 z-50 flex items-center justify-center font-body p-4">
+    <div class="absolute inset-0 bg-surface/80 backdrop-blur-sm" (click)="closeCreateModal()"></div>
+    <div
+        class="relative bg-surface rounded-2xl border border-outline-variant/20 shadow-xl w-full max-w-md overflow-hidden animate-fade-in-up">
+        <div
+            class="px-6 py-5 border-b border-outline-variant/10 flex justify-between items-center bg-surface-container-lowest">
+            <h3 class="font-headline font-bold text-lg text-on-surface">Registrar Usuario</h3>
+            <button (click)="closeCreateModal()"
+                class="text-on-surface-variant hover:text-on-surface transition-colors p-1 rounded-full hover:bg-surface-container">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <div class="p-6 space-y-4">
+            <div>
+                <label
+                    class="block text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider mb-1.5">Nombre
+                    Completo</label>
+                <input [ngModel]="newUser().full_name" (ngModelChange)="updateCreateField('full_name', $event)"
+                    type="text"
+                    class="w-full bg-surface-container-lowest border border-outline-variant/40 rounded-lg px-4 py-2.5 text-sm text-on-surface focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all"
+                    placeholder="Ej. Ana Pérez">
+            </div>
+            <div>
+                <label
+                    class="block text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider mb-1.5">Email</label>
+                <input [ngModel]="newUser().email" (ngModelChange)="updateCreateField('email', $event)" type="email"
+                    class="w-full bg-surface-container-lowest border border-outline-variant/40 rounded-lg px-4 py-2.5 text-sm text-on-surface focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all"
+                    placeholder="ana@ejemplo.com">
+            </div>
+            <div>
+                <label
+                    class="block text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider mb-1.5">Username</label>
+                <input [ngModel]="newUser().username" (ngModelChange)="updateCreateField('username', $event)"
+                    type="text"
+                    class="w-full bg-surface-container-lowest border border-outline-variant/40 rounded-lg px-4 py-2.5 text-sm text-on-surface focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all"
+                    placeholder="anaperez">
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label
+                        class="block text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider mb-1.5">Contraseña</label>
+                    <input [ngModel]="newUser().password" (ngModelChange)="updateCreateField('password', $event)"
+                        type="password"
+                        class="w-full bg-surface-container-lowest border border-outline-variant/40 rounded-lg px-4 py-2.5 text-sm text-on-surface focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all"
+                        placeholder="••••••••">
+                </div>
+                <div>
+                    <label
+                        class="block text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider mb-1.5">Confirmar</label>
+                    <input [ngModel]="newUser().confirm_password"
+                        (ngModelChange)="updateCreateField('confirm_password', $event)" type="password"
+                        class="w-full bg-surface-container-lowest border border-outline-variant/40 rounded-lg px-4 py-2.5 text-sm text-on-surface focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all"
+                        placeholder="••••••••">
+                </div>
+            </div>
+        </div>
+        <div class="px-6 py-4 border-t border-outline-variant/10 bg-surface-container-lowest flex justify-end gap-3">
+            <button (click)="closeCreateModal()"
+                class="px-4 py-2 text-sm font-headline font-bold text-on-surface-variant hover:text-on-surface transition-colors">Cancelar</button>
+            <button [disabled]="creating()" (click)="onCreateSubmit()"
+                class="px-5 py-2 machined-gradient text-on-primary rounded-lg text-sm font-headline font-bold hover:shadow-md transition-all active:scale-[0.98] disabled:opacity-70 flex items-center gap-2">
+                <span *ngIf="creating()" class="material-symbols-outlined animate-spin"
+                    style="font-size:16px;">progress_activity</span>
+                {{ creating() ? 'Creando...' : 'Crear Usuario' }}
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div *ngIf="showEditModal()" class="fixed inset-0 z-50 flex items-center justify-center font-body p-4">
+    <div class="absolute inset-0 bg-surface/80 backdrop-blur-sm" (click)="closeEditModal()"></div>
+    <div
+        class="relative bg-surface rounded-2xl border border-outline-variant/20 shadow-xl w-full max-w-md overflow-hidden animate-fade-in-up">
+        <div
+            class="px-6 py-5 border-b border-outline-variant/10 flex justify-between items-center bg-surface-container-lowest">
+            <h3 class="font-headline font-bold text-lg text-on-surface">Editar Usuario</h3>
+            <button (click)="closeEditModal()"
+                class="text-on-surface-variant hover:text-on-surface transition-colors p-1 rounded-full hover:bg-surface-container">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <div class="p-6 space-y-5">
+            <div>
+                <label
+                    class="block text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider mb-1.5">Nombre
+                    Completo</label>
+                <input [ngModel]="editForm().full_name" (ngModelChange)="updateEditField('full_name', $event)"
+                    type="text"
+                    class="w-full bg-surface-container-lowest border border-outline-variant/40 rounded-lg px-4 py-2.5 text-sm text-on-surface focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all">
+            </div>
+
+            <div *ngIf="currentUser()?.id !== editTarget()?.id">
+                <label
+                    class="block text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider mb-2.5">Roles
+                    Asignados</label>
+                <div class="grid grid-cols-2 gap-2">
+                    <label *ngFor="let role of availableRoles"
+                        class="flex items-center gap-2 p-2 rounded-lg border cursor-pointer hover:bg-surface-container-low transition-colors"
+                        [ngClass]="editForm().roles.includes(role) ? 'border-primary bg-primary/5' : 'border-outline-variant/30'">
+                        <input type="checkbox" [checked]="editForm().roles.includes(role)"
+                            (change)="toggleRoleSelection(role)"
+                            class="rounded border-outline-variant/50 text-primary focus:ring-primary">
+                        <span class="text-sm text-on-surface">{{ role }}</span>
+                    </label>
+                </div>
+                <p class="text-[10px] text-on-surface-variant mt-1.5">* Modificar roles surtirá efecto en la próxima
+                    solicitud.</p>
+            </div>
+
+            <div *ngIf="currentUser()?.id === editTarget()?.id"
+                class="p-3 bg-secondary/10 text-secondary border border-secondary/20 rounded-lg text-xs">
+                No puedes modificar tus propios roles. Contacta a otro administrador si requieres ajustes.
+            </div>
+
+            <label
+                class="flex items-center gap-3 p-3 rounded-lg border border-outline-variant/30 cursor-pointer hover:bg-surface-container-low transition-colors">
+                <div class="relative flex items-center">
+                    <input type="checkbox" [ngModel]="editForm().is_active"
+                        (ngModelChange)="updateEditField('is_active', $event)" class="sr-only peer">
+                    <div
+                        class="w-9 h-5 bg-outline-variant/30 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary">
+                    </div>
+                </div>
+                <div>
+                    <span class="text-sm font-bold text-on-surface block">Cuenta Activa</span>
+                    <span class="text-xs text-on-surface-variant">Permite al usuario iniciar sesión en la
+                        plataforma</span>
+                </div>
+            </label>
+        </div>
+        <div class="px-6 py-4 border-t border-outline-variant/10 bg-surface-container-lowest flex justify-end gap-3">
+            <button (click)="closeEditModal()"
+                class="px-4 py-2 text-sm font-headline font-bold text-on-surface-variant hover:text-on-surface transition-colors">Cancelar</button>
+            <button (click)="onEditSubmit()"
+                class="px-5 py-2 machined-gradient text-on-primary rounded-lg text-sm font-headline font-bold hover:shadow-md transition-all active:scale-[0.98]">
+                Guardar Cambios
+            </button>
+        </div>
+    </div>
+</div>
