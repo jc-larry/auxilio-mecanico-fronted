@@ -85,104 +85,117 @@
         </button>
     </div>
 
-    <!-- Table -->
-    <div *ngIf="!loading() && requests().length > 0" class="space-y-2">
-        <!-- Header -->
-        <div
-            class="grid grid-cols-12 px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant font-label">
-            <span class="col-span-1">Código</span>
-            <span class="col-span-2">Fecha</span>
-            <span class="col-span-3">Tipo de Servicio</span>
-            <span class="col-span-1 text-center">Estado</span>
-            <span class="col-span-2">Mecánico</span>
-            <span class="col-span-1 text-center">Progreso</span>
-            <span class="col-span-2 text-right">Acciones</span>
-        </div>
+    <!-- Table Section -->
+    <div *ngIf="!loading() && requests().length > 0" class="bg-surface rounded-2xl border border-outline-variant/20 shadow-sm overflow-hidden mb-6">
+        <div class="overflow-x-auto min-h-[400px]">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-surface-container-low/50">
+                        <th class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/20">Código</th>
+                        <th class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/20">Fecha</th>
+                        <th class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/20">Tipo de Servicio</th>
+                        <th class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/20 text-center">Estado</th>
+                        <th class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/20">Mecánico</th>
+                        <th class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/20 text-center">Progreso</th>
+                        <th class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/20 text-right">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let req of requests()" class="group hover:bg-surface-container-lowest/50 transition-colors border-b border-outline-variant/10 last:border-0 cursor-pointer">
+                        <!-- Code -->
+                        <td class="py-4 px-5">
+                            <span class="font-mono text-sm font-bold text-primary">{{ req.code }}</span>
+                        </td>
 
-        <!-- Rows -->
-        <div *ngFor="let req of requests()" class="grid grid-cols-12 items-center px-6 py-5 bg-surface-container-lowest rounded-xl
-                   hover:bg-surface-container-high transition-colors cursor-pointer group ghost-shadow">
+                        <!-- Date -->
+                        <td class="py-4 px-5">
+                            <span class="text-sm text-on-surface-variant font-body">{{ formatDate(req.created_at) }}</span>
+                        </td>
 
-            <!-- Code -->
-            <span class="col-span-1 font-mono text-sm font-bold text-primary">{{ req.code }}</span>
+                        <!-- Service type -->
+                        <td class="py-4 px-5">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded bg-surface-container flex items-center justify-center shrink-0">
+                                    <span class="material-symbols-outlined text-primary" style="font-size:16px;">{{ req.service_icon }}</span>
+                                </div>
+                                <span class="font-bold text-on-surface text-sm font-headline">{{ req.service_type_label }}</span>
+                            </div>
+                        </td>
 
-            <!-- Date -->
-            <span class="col-span-2 text-sm text-on-surface-variant font-body">{{ formatDate(req.created_at) }}</span>
+                        <!-- Status -->
+                        <td class="py-4 px-5 text-center">
+                            <span class="text-[10px] font-bold uppercase px-2.5 py-1 rounded font-label inline-block" [ngClass]="{
+                                'bg-surface-container text-on-surface-variant':       req.status === 'PENDIENTE',
+                                'bg-surface-container-highest text-primary':          req.status === 'EN_PROGRESO',
+                                'bg-tertiary-container text-on-tertiary-container':   req.status === 'CRITICO',
+                                'bg-emerald-100 text-emerald-700':                    req.status === 'COMPLETADO'
+                            }">
+                                {{ getStatusLabel(req.status) }}
+                            </span>
+                        </td>
 
-            <!-- Service type -->
-            <div class="col-span-3 flex items-center gap-3">
-                <div class="w-8 h-8 rounded bg-surface-container flex items-center justify-center shrink-0">
-                    <span class="material-symbols-outlined text-primary" style="font-size:16px;">{{ req.service_icon
-                        }}</span>
-                </div>
-                <span class="font-bold text-on-surface text-sm font-headline">{{ req.service_type_label }}</span>
-            </div>
+                        <!-- Mechanic -->
+                        <td class="py-4 px-5">
+                            <div class="flex items-center gap-2">
+                                <div *ngIf="req.assigned_mechanic"
+                                    class="w-7 h-7 rounded-full machined-gradient flex items-center justify-center text-on-primary text-[10px] font-bold font-label shrink-0">
+                                    {{ getMechanicInitials(req.assigned_mechanic) }}
+                                </div>
+                                <span class="text-sm font-body"
+                                    [class]="req.assigned_mechanic ? 'text-on-surface' : 'text-outline italic'">
+                                    {{ req.assigned_mechanic ?? 'Sin asignar' }}
+                                </span>
+                            </div>
+                        </td>
 
-            <!-- Status -->
-            <div class="col-span-1 flex justify-center">
-                <span class="text-[10px] font-bold uppercase px-2.5 py-1 rounded font-label" [ngClass]="{
-                    'bg-surface-container text-on-surface-variant':       req.status === 'PENDIENTE',
-                    'bg-surface-container-highest text-primary':          req.status === 'EN_PROGRESO',
-                    'bg-tertiary-container text-on-tertiary-container':   req.status === 'CRITICO',
-                    'bg-emerald-100 text-emerald-700':                    req.status === 'COMPLETADO'
-                }">
-                    {{ getStatusLabel(req.status) }}
-                </span>
-            </div>
+                        <!-- Progress -->
+                        <td class="py-4 px-5 text-center">
+                            <div class="flex justify-center">
+                                <div class="w-full max-w-20 h-1.5 rounded-full bg-surface-container-high overflow-hidden">
+                                    <div class="h-full rounded-full transition-all duration-300" [style.width.%]="req.progress"
+                                        [style.background]="getTimelineColor(req.status)"></div>
+                                </div>
+                            </div>
+                        </td>
 
-            <!-- Mechanic -->
-            <div class="col-span-2 flex items-center gap-2">
-                <div *ngIf="req.assigned_mechanic"
-                    class="w-7 h-7 rounded-full machined-gradient flex items-center justify-center text-on-primary text-[10px] font-bold font-label shrink-0">
-                    {{ getMechanicInitials(req.assigned_mechanic) }}
-                </div>
-                <span class="text-sm font-body"
-                    [class]="req.assigned_mechanic ? 'text-on-surface' : 'text-outline italic'">
-                    {{ req.assigned_mechanic ?? 'Sin asignar' }}
-                </span>
-            </div>
+                        <!-- Actions -->
+                        <td class="py-4 px-5 text-right">
+                            <div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <!-- Assign / Reassign -->
+                                <button *ngIf="req.status !== 'COMPLETADO'" (click)="openAssignModal(req); $event.stopPropagation()"
+                                    class="text-[10px] font-bold px-3 py-1.5 rounded-lg font-label transition-all mr-1" [class]="req.status === 'PENDIENTE'
+                                        ? 'bg-secondary text-on-secondary hover:scale-[1.02]'
+                                        : 'bg-surface-container-highest text-primary hover:bg-surface-container-high'">
+                                    {{ req.assigned_mechanic ? 'Reasignar' : 'Asignar' }}
+                                </button>
 
-            <!-- Progress -->
-            <div class="col-span-1 flex justify-center">
-                <div class="w-full max-w-20 h-1.5 rounded-full bg-surface-container-high overflow-hidden">
-                    <div class="h-full rounded-full transition-all duration-300" [style.width.%]="req.progress"
-                        [style.background]="getTimelineColor(req.status)"></div>
-                </div>
-            </div>
+                                <!-- Complete -->
+                                <button *ngIf="req.status === 'EN_PROGRESO' || req.status === 'CRITICO'"
+                                    (click)="onUpdateStatus(req, 'COMPLETADO'); $event.stopPropagation()"
+                                    class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-emerald-50 text-on-surface-variant hover:text-emerald-600 transition-colors"
+                                    title="Marcar como completado">
+                                    <span class="material-symbols-outlined" style="font-size:18px;">check_circle</span>
+                                </button>
 
-            <!-- Actions -->
-            <div class="col-span-2 flex items-center justify-end gap-2">
-                <!-- Assign / Reassign -->
-                <button *ngIf="req.status !== 'COMPLETADO'" (click)="openAssignModal(req); $event.stopPropagation()"
-                    class="text-[10px] font-bold px-3 py-1.5 rounded-lg font-label transition-all" [class]="req.status === 'PENDIENTE'
-                        ? 'bg-secondary text-on-secondary hover:scale-[1.02]'
-                        : 'bg-surface-container-highest text-primary hover:bg-surface-container-high'">
-                    {{ req.assigned_mechanic ? 'Reasignar' : 'Asignar' }}
-                </button>
+                                <!-- Mark critical -->
+                                <button *ngIf="req.status !== 'COMPLETADO' && req.status !== 'CRITICO'"
+                                    (click)="onUpdateStatus(req, 'CRITICO'); $event.stopPropagation()"
+                                    class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-red-50 text-on-surface-variant hover:text-red-600 transition-colors"
+                                    title="Marcar como crítico">
+                                    <span class="material-symbols-outlined" style="font-size:18px;">warning</span>
+                                </button>
 
-                <!-- Complete -->
-                <button *ngIf="req.status === 'EN_PROGRESO' || req.status === 'CRITICO'"
-                    (click)="onUpdateStatus(req, 'COMPLETADO'); $event.stopPropagation()"
-                    class="p-1.5 text-on-surface-variant hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
-                    title="Marcar como completado">
-                    <span class="material-symbols-outlined" style="font-size:16px;">check_circle</span>
-                </button>
-
-                <!-- Mark critical -->
-                <button *ngIf="req.status !== 'COMPLETADO' && req.status !== 'CRITICO'"
-                    (click)="onUpdateStatus(req, 'CRITICO'); $event.stopPropagation()"
-                    class="p-1.5 text-on-surface-variant hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                    title="Marcar como crítico">
-                    <span class="material-symbols-outlined" style="font-size:16px;">warning</span>
-                </button>
-
-                <!-- Delete -->
-                <button (click)="onDelete(req); $event.stopPropagation()"
-                    class="p-1.5 text-on-surface-variant hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
-                    title="Eliminar">
-                    <span class="material-symbols-outlined" style="font-size:16px;">delete</span>
-                </button>
-            </div>
+                                <!-- Delete -->
+                                <button (click)="onDelete(req); $event.stopPropagation()"
+                                    class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-red-500/10 text-on-surface-variant hover:text-red-500 transition-colors"
+                                    title="Eliminar">
+                                    <span class="material-symbols-outlined" style="font-size:18px;">delete</span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 

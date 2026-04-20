@@ -82,82 +82,90 @@
 
     <!-- Table -->
     <section *ngIf="!loading() && items().length > 0">
-        <div class="bg-surface-container-low rounded-xl overflow-hidden p-1">
-            <!-- Column headers -->
-            <div
-                class="grid grid-cols-12 gap-1 px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest font-label">
-                <span class="col-span-4">Nombre de la Pieza</span>
-                <span class="col-span-2 text-center">SKU</span>
-                <span class="col-span-2 text-center">Precio</span>
-                <span class="col-span-2 text-center">Cantidad</span>
-                <span class="col-span-2 text-right">Acciones</span>
-            </div>
+        <div class="bg-surface rounded-2xl border border-outline-variant/20 shadow-sm overflow-hidden mb-6">
+            <div class="overflow-x-auto min-h-[400px]">
+                <table class="w-full text-left border-collapse">
+                    <!-- Column headers -->
+                    <thead>
+                        <tr class="bg-surface-container-low/50">
+                            <th class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/20">Nombre de la Pieza</th>
+                            <th class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/20 text-center">SKU</th>
+                            <th class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/20 text-center">Precio</th>
+                            <th class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/20 text-center">Cantidad</th>
+                            <th class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/20 text-right">Acciones</th>
+                        </tr>
+                    </thead>
 
-            <!-- Rows -->
-            <div class="space-y-1">
-                <div *ngFor="let part of items()" class="grid grid-cols-12 items-center gap-1 px-6 py-4 bg-surface-container-lowest
-                           hover:bg-surface-container-high transition-colors rounded-lg group">
+                    <!-- Rows -->
+                    <tbody>
+                        <tr *ngFor="let part of items()" class="group hover:bg-surface-container-lowest/50 transition-colors border-b border-outline-variant/10 last:border-0">
 
-                    <!-- Name -->
-                    <div class="col-span-4 flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
-                            [class]="part.is_critical ? 'bg-tertiary-container' : 'bg-surface-container'">
-                            <span class="material-symbols-outlined text-xl"
-                                [class]="part.is_critical ? 'text-on-tertiary-container' : 'text-primary'"
-                                style="font-size: 18px;"
-                                [style.font-variation-settings]="part.is_critical ? '&quot;FILL&quot; 1' : 'normal'">
-                                {{ part.is_critical ? 'warning' : part.icon }}
-                            </span>
-                        </div>
-                        <div>
-                            <p class="font-bold text-on-surface text-sm font-headline leading-tight">{{ part.name }}</p>
-                            <p class="text-xs text-on-surface-variant font-body">{{ part.system_label }}</p>
-                        </div>
-                    </div>
+                            <!-- Name -->
+                            <td class="py-4 px-5">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-full flex items-center justify-center shadow-sm shrink-0"
+                                        [class]="part.is_critical ? 'bg-tertiary-container' : 'bg-surface-container'">
+                                        <span class="material-symbols-outlined text-xl"
+                                            [class]="part.is_critical ? 'text-on-tertiary-container' : 'text-primary'"
+                                            style="font-size: 18px;"
+                                            [style.font-variation-settings]="part.is_critical ? '&quot;FILL&quot; 1' : 'normal'">
+                                            {{ part.is_critical ? 'warning' : part.icon }}
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <p class="font-bold text-on-surface text-sm font-headline leading-tight">{{ part.name }}</p>
+                                        <p class="text-xs text-on-surface-variant font-body">{{ part.system_label }}</p>
+                                    </div>
+                                </div>
+                            </td>
 
-                    <!-- SKU -->
-                    <div class="col-span-2 text-center font-mono text-sm text-on-surface-variant">{{ part.sku }}</div>
+                            <!-- SKU -->
+                            <td class="py-4 px-5 text-center font-mono text-sm text-on-surface-variant">
+                                {{ part.sku }}
+                            </td>
 
-                    <!-- Price -->
-                    <div class="col-span-2 text-center font-bold text-on-surface font-headline">{{
-                        formatPrice(part.unit_price) }}</div>
+                            <!-- Price -->
+                            <td class="py-4 px-5 text-center text-sm font-bold text-on-surface font-headline">
+                                {{ formatPrice(part.unit_price) }}
+                            </td>
 
-                    <!-- Qty -->
-                    <div class="col-span-2 text-center">
-                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full font-label"
-                            [class]="part.is_critical ? 'bg-tertiary-container' : 'bg-surface-container'">
-                            <span class="font-bold text-sm"
-                                [class]="part.is_critical ? 'text-on-tertiary-container' : 'text-on-surface'">
-                                {{ part.quantity }}
-                            </span>
-                            <span class="text-[10px] font-bold uppercase"
-                                [class]="part.is_critical ? 'text-on-tertiary-container' : 'text-on-surface-variant'">
-                                {{ part.is_critical ? 'CRÍTICO' : 'UDS' }}
-                            </span>
-                        </div>
-                    </div>
+                            <!-- Qty -->
+                            <td class="py-4 px-5 text-center">
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold font-label tracking-wide"
+                                    [class]="part.is_critical ? 'bg-tertiary-container text-on-tertiary-container' : 'bg-surface-container text-on-surface'">
+                                    <span class="font-bold">
+                                        {{ part.quantity }}
+                                    </span>
+                                    <span class="text-[10px] uppercase opacity-80">
+                                        {{ part.is_critical ? 'CRÍTICO' : 'UDS' }}
+                                    </span>
+                                </span>
+                            </td>
 
-                    <!-- Actions -->
-                    <div class="col-span-2 flex items-center justify-end gap-2">
-                        <button *ngIf="part.is_critical" (click)="openRestockModal(part); $event.stopPropagation()"
-                            class="bg-secondary text-on-secondary px-4 py-1.5 rounded-lg text-xs font-bold font-label
-                                   hover:scale-[1.02] transition-transform">
-                            Reabastecer
-                        </button>
-                        <button *ngIf="!part.is_critical" (click)="openRestockModal(part); $event.stopPropagation()"
-                            class="text-primary font-bold text-xs font-label hover:underline opacity-0 group-hover:opacity-100 transition-opacity">
-                            +Stock
-                        </button>
-                        <button (click)="openEditModal(part); $event.stopPropagation()"
-                            class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container rounded-lg transition-colors">
-                            <span class="material-symbols-outlined" style="font-size:16px;">edit</span>
-                        </button>
-                        <button (click)="onDelete(part); $event.stopPropagation()"
-                            class="p-1.5 text-on-surface-variant hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100">
-                            <span class="material-symbols-outlined" style="font-size:16px;">delete</span>
-                        </button>
-                    </div>
-                </div>
+                            <!-- Actions -->
+                            <td class="py-4 px-5 text-right">
+                                <div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button *ngIf="part.is_critical" (click)="openRestockModal(part); $event.stopPropagation()"
+                                        class="bg-secondary/10 text-secondary border border-secondary/20 px-3 py-1 rounded text-xs font-bold font-label uppercase tracking-wide hover:bg-secondary/20 transition-colors mr-1">
+                                        Reabastecer
+                                    </button>
+                                    <button *ngIf="!part.is_critical" (click)="openRestockModal(part); $event.stopPropagation()"
+                                        class="text-primary font-bold text-xs font-label hover:underline transition-opacity mr-1">
+                                        +Stock
+                                    </button>
+                                    <button (click)="openEditModal(part); $event.stopPropagation()"
+                                        class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-surface-container text-on-surface-variant hover:text-primary transition-colors" title="Editar">
+                                        <span class="material-symbols-outlined" style="font-size:18px;">edit</span>
+                                    </button>
+                                    <button (click)="onDelete(part); $event.stopPropagation()"
+                                        class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-red-500/10 text-on-surface-variant hover:text-red-500 transition-colors" title="Eliminar">
+                                        <span class="material-symbols-outlined" style="font-size:18px;">delete</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
