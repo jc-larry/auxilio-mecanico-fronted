@@ -27,6 +27,8 @@ export interface User {
   is_verified: boolean;
   created_at: string;
   last_login: string | null;
+  roles?: string[];
+  permissions?: string[];
 }
 
 export interface ApiError {
