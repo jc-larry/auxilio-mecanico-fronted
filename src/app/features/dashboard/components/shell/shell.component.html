@@ -11,13 +11,13 @@
             </div>
             <div>
                 <h1 class="font-headline font-bold text-on-surface text-lg leading-tight">Auxilio Mecánico</h1>
-                <p class="text-[10px] uppercase tracking-widest text-on-surface-variant font-label font-bold">Admin</p>
+                <p class="text-[10px] uppercase tracking-widest text-on-surface-variant font-label font-bold">{{ user()?.roles?.[0] || 'Usuario' }}</p>
             </div>
         </div>
 
         <!-- Nav -->
         <nav class="flex-1 space-y-1">
-            <a *ngFor="let item of navItems" [routerLink]="item.route"
+            <a *ngFor="let item of navItems()" [routerLink]="item.route"
                 routerLinkActive="bg-white text-on-surface shadow-sm scale-[0.98] font-semibold"
                 [routerLinkActiveOptions]="{ exact: true }"
                 class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-headline font-semibold tracking-tight
