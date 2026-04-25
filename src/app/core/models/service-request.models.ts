@@ -37,8 +37,8 @@ export interface ServiceRequest {
 }
 
 export interface ServiceRequestCreate {
-  client_name: string;
-  vehicle_info: string;
+  cliente_id: number;
+  vehiculo_id: number;
   service_type: ServiceType;
   description: string;
   location: string;

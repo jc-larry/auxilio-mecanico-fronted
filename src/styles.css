@@ -17,7 +17,20 @@
 
   h1, h2, h3, h4 { font-family: 'Manrope', sans-serif; }
 
-  input:focus { outline: none; }
+  button:not(.machined-gradient):not(.bg-primary) {
+    border: 1px solid rgba(142, 145, 153, 0.2);
+  }
+
+  input, select, textarea {
+    border: 1px solid rgba(142, 145, 153, 0.4) !important;
+    transition: all 0.2s ease;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #0a0f1a !important;
+    box-shadow: 0 0 0 2px rgba(10, 15, 26, 0.05);
+  }
 }
 
 @layer utilities {

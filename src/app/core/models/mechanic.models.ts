@@ -30,6 +30,7 @@ export interface Mechanic {
   created_at: string;
   updated_at: string;
   user_id: number;
+  workshop_id: number | null;
 }
 
 export interface MechanicCreate {
@@ -38,6 +39,7 @@ export interface MechanicCreate {
   specialty: Specialty;
   expertise: MechanicExpertise;
   avatar_color: string;
+  workshop_id: number | null;
 }
 
 export interface MechanicUpdate {
@@ -47,6 +49,7 @@ export interface MechanicUpdate {
   expertise?: MechanicExpertise;
   is_available?: boolean;
   avatar_color?: string;
+  workshop_id?: number | null;
 }
 
 export interface PaginatedResponse<T> {
