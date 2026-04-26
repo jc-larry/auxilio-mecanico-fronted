@@ -38,7 +38,7 @@ export const DASHBOARD_ROUTES: Routes = [
       {
         path: 'analytics',
         canActivate: [roleGuard],
-        data: { roles: ['Administrador', 'Supervisor'] },
+        data: { roles: ['Administrador', 'Propietario'] },
         loadComponent: () =>
           import('./pages/analytics/analytics.component').then(m => m.AnalyticsComponent),
       },
@@ -48,6 +48,20 @@ export const DASHBOARD_ROUTES: Routes = [
         data: { roles: ['Administrador'] },
         loadComponent: () =>
           import('./pages/users-management/users-management.component').then(m => m.UsersManagementComponent),
+      },
+      {
+        path: 'roles',
+        canActivate: [roleGuard],
+        data: { roles: ['Administrador'] },
+        loadComponent: () =>
+          import('./pages/roles-management/roles-management.component').then(m => m.RolesManagementComponent),
+      },
+      {
+        path: 'workshops',
+        canActivate: [roleGuard],
+        data: { roles: ['Administrador', 'Propietario'] },
+        loadComponent: () =>
+          import('./pages/workshops-management/workshops-management.component').then(m => m.WorkshopsManagementComponent),
       },
     ],
   },

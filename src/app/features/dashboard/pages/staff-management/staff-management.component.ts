@@ -12,6 +12,8 @@ import {
 } from '../../../../core/models/mechanic.models';
 import { MechanicService } from '../../../../core/services/mechanic.service';
 import { NotificationService } from '../../../../core/services/notification.service';
+import { WorkshopService } from '../../../../core/services/workshop.service';
+import { Workshop } from '../../../../core/models/workshop.models';
 
 @Component({
   selector: 'app-staff-management',
@@ -30,6 +32,7 @@ export class StaffManagementComponent implements OnInit {
   readonly totalPages = signal(1);
   readonly totalItems = signal(0);
   readonly perPage = 10;
+  readonly workshops = signal<Workshop[]>([]);
 
   // ── Modal state ──
   readonly showCreateModal = signal(false);
@@ -44,6 +47,7 @@ export class StaffManagementComponent implements OnInit {
     specialty: 'general',
     expertise: 'JUNIOR',
     avatar_color: '#091426',
+    workshop_id: null,
   });
 
   // ── Edit form ──
@@ -61,12 +65,21 @@ export class StaffManagementComponent implements OnInit {
 
   constructor(
     private mecService: MechanicService,
+    private workshopService: WorkshopService,
     private notify: NotificationService
   ) {}
 
   ngOnInit(): void {
     this.loadStaff();
     this.loadStats();
+    this.loadWorkshops();
+  }
+
+  loadWorkshops(): void {
+    this.workshopService.list(1, 50).subscribe({
+      next: (res) => this.workshops.set(res.items),
+      error: () => this.notify.error('Error al cargar talleres')
+    });
   }
 
   // ── Data loading ──
@@ -112,6 +125,7 @@ export class StaffManagementComponent implements OnInit {
       specialty: 'general',
       expertise: 'JUNIOR',
       avatar_color: randomColor,
+      workshop_id: this.workshops()[0]?.id ?? null,
     });
     this.showCreateModal.set(true);
   }
@@ -142,7 +156,7 @@ export class StaffManagementComponent implements OnInit {
     });
   }
 
-  updateCreateField(field: keyof MechanicCreate, value: string): void {
+  updateCreateField(field: keyof MechanicCreate, value: any): void {
     this.newMechanic.update(current => ({ ...current, [field]: value }));
   }
 
@@ -156,6 +170,7 @@ export class StaffManagementComponent implements OnInit {
       specialty: mec.specialty,
       expertise: mec.expertise,
       avatar_color: mec.avatar_color,
+      workshop_id: mec.workshop_id,
     });
     this.showEditModal.set(true);
   }
@@ -165,7 +180,7 @@ export class StaffManagementComponent implements OnInit {
     this.editTarget.set(null);
   }
 
-  updateEditField(field: string, value: string): void {
+  updateEditField(field: string, value: any): void {
     this.editForm.update(current => ({ ...current, [field]: value }));
   }
 

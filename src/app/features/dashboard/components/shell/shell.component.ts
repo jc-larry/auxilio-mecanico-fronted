@@ -38,19 +38,19 @@ export class ShellComponent {
     {
       label: 'Taller',
       icon: 'work',
-      requiredPermission: 'usuarios.ver',
+      requiredRole: 'Administrador, Propietario',
       children: [
         { 
           label: 'Gestionar taller', 
-          icon: 'warehouse', 
+          icon: 'storefront', 
           route: '/dashboard/workshops', 
-          requiredRole: 'Administrador, Propietario' 
+          requiredRole: 'Administrador, Propietario'
         },
         { 
           label: 'Gestionar mecánicos', 
           icon: 'engineering', 
           route: '/dashboard/staff',
-          requiredPermission: 'usuarios.ver'
+          requiredRole: 'Administrador'
         },
       ]
     },
@@ -102,8 +102,7 @@ export class ShellComponent {
       return items.reduce((acc: NavItem[], item) => {
         const hasPermission = !item.requiredPermission || permissions.includes(item.requiredPermission);
         const hasRole = !item.requiredRole || 
-                         item.requiredRole.split(',').some(r => roles.includes(r.trim())) || 
-                         roles.includes('Propietario');
+                         item.requiredRole.split(',').some(r => roles.includes(r.trim()));
 
         if (hasPermission && hasRole) {
           if (item.children) {

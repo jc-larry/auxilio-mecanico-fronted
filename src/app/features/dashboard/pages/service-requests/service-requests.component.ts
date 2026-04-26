@@ -13,6 +13,11 @@ import {
 } from '../../../../core/models/service-request.models';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { ServiceRequestService } from '../../../../core/services/service-request.service';
+import { MechanicService } from '../../../../core/services/mechanic.service';
+import { Mechanic } from '../../../../core/models/mechanic.models';
+import { ClientService } from '../../../../core/services/client.service';
+import { Client } from '../../../../core/models/client.models';
+import { Vehicle } from '../../../../core/models/vehicle.models';
 
 @Component({
   selector: 'app-service-requests',
@@ -36,6 +41,10 @@ export class ServiceRequestsComponent implements OnInit {
   readonly perPage = 10;
   readonly statusFilter = signal<Status | null>(null);
 
+  readonly mechanics = signal<Mechanic[]>([]);
+  readonly clients = signal<Client[]>([]);
+  readonly vehicles = signal<Vehicle[]>([]);
+
   // ── Modal state ──
   readonly showCreateModal = signal(false);
   readonly showAssignModal = signal(false);
@@ -45,8 +54,8 @@ export class ServiceRequestsComponent implements OnInit {
 
   // ── Form model ──
   readonly newRequest = signal<ServiceRequestCreate>({
-    client_name: '',
-    vehicle_info: '',
+    cliente_id: 0,
+    vehiculo_id: 0,
     service_type: 'general',
     description: '',
     location: '',
@@ -72,12 +81,16 @@ export class ServiceRequestsComponent implements OnInit {
 
   constructor(
     private srService: ServiceRequestService,
+    private mechanicService: MechanicService,
+    private clientService: ClientService,
     private notify: NotificationService
   ) {}
 
   ngOnInit(): void {
     this.loadRequests();
     this.loadStats();
+    this.loadMechanics();
+    this.loadClients();
   }
 
   // ── Data loading ──
@@ -106,6 +119,31 @@ export class ServiceRequestsComponent implements OnInit {
     });
   }
 
+  loadMechanics(): void {
+    this.mechanicService.list(1, 50, true).subscribe({
+      next: (res) => this.mechanics.set(res.items),
+      error: () => this.notify.error('Error al cargar mecánicos'),
+    });
+  }
+
+  loadClients(): void {
+    this.clientService.list(1, 50).subscribe({
+      next: (res) => this.clients.set(res.items),
+      error: (err) => {
+        let detail = err.error?.detail || 'Error al cargar clientes';
+        if (typeof detail === 'object') detail = JSON.stringify(detail);
+        this.notify.error(detail);
+      },
+    });
+  }
+
+  loadVehicles(clientId: number): void {
+    this.clientService.getVehicles(clientId).subscribe({
+      next: (res) => this.vehicles.set(res),
+      error: () => this.notify.error('Error al cargar vehículos del cliente'),
+    });
+  }
+
   // ── Pagination ──
 
   onPageChange(page: number): void {
@@ -126,13 +164,14 @@ export class ServiceRequestsComponent implements OnInit {
 
   openCreateModal(): void {
     this.newRequest.set({
-      client_name: '',
-      vehicle_info: '',
+      cliente_id: 0,
+      vehiculo_id: 0,
       service_type: 'general',
       description: '',
       location: '',
       priority: 'media',
     });
+    this.vehicles.set([]);
     this.showCreateModal.set(true);
   }
 
@@ -142,7 +181,7 @@ export class ServiceRequestsComponent implements OnInit {
 
   onCreateSubmit(): void {
     const data = this.newRequest();
-    if (!data.client_name || !data.vehicle_info || !data.location) {
+    if (!data.cliente_id || !data.vehiculo_id || !data.location) {
       this.notify.error('Complete los campos obligatorios');
       return;
     }
@@ -155,15 +194,31 @@ export class ServiceRequestsComponent implements OnInit {
         this.loadRequests();
         this.loadStats();
       },
-      error: () => {
-        this.notify.error('Error al crear solicitud');
+      error: (err) => {
+        const msg = err.error?.detail || 'Error al crear solicitud';
+        this.notify.error(msg);
         this.creating.set(false);
       },
     });
   }
 
-  updateFormField(field: keyof ServiceRequestCreate, value: string): void {
+  updateFormField(field: keyof ServiceRequestCreate, value: any): void {
     this.newRequest.update(current => ({ ...current, [field]: value }));
+  }
+
+  onClientChange(clientId: string): void {
+    const id = parseInt(clientId, 10);
+    this.updateFormField('cliente_id', id);
+    this.updateFormField('vehiculo_id', 0);
+    if (id > 0) {
+      this.loadVehicles(id);
+    } else {
+      this.vehicles.set([]);
+    }
+  }
+
+  onVehicleChange(vehicleId: string): void {
+    this.updateFormField('vehiculo_id', parseInt(vehicleId, 10));
   }
 
   // ── Assign mechanic ──

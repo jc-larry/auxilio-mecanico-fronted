@@ -27,8 +27,10 @@ export class UsersManagementComponent implements OnInit {
   // ── Modal state ──
   readonly showCreateModal = signal(false);
   readonly showEditModal = signal(false);
+  readonly showPasswordModal = signal(false);
   readonly editTarget = signal<User | null>(null);
   readonly creating = signal(false);
+  readonly updatingPassword = signal(false);
 
   // ── Form model ──
   readonly newUser = signal<RegisterRequest>({
@@ -39,6 +41,11 @@ export class UsersManagementComponent implements OnInit {
     confirm_password: '',
   });
 
+  readonly passwordForm = signal({
+    new_password: '',
+    confirm_password: '',
+  });
+
   // ── Edit form ──
   readonly editForm = signal<{ full_name: string; is_active: boolean; roles: string[] }>({
     full_name: '',
@@ -46,7 +53,7 @@ export class UsersManagementComponent implements OnInit {
     roles: [],
   });
   
-  readonly availableRoles = ['Administrador', 'Supervisor', 'Mecánico', 'Cliente'];
+  readonly availableRoles = ['Administrador', 'Propietario', 'Mecánico', 'Cliente'];
 
   readonly pages = computed(() => {
     const total = this.totalPages();
@@ -124,8 +131,9 @@ export class UsersManagementComponent implements OnInit {
         this.creating.set(false);
         this.loadUsers();
       },
-      error: () => {
-        this.notify.error('Error al registrar usuario');
+      error: (err) => {
+        const message = err.error?.detail || 'Error al registrar usuario';
+        this.notify.error(message);
         this.creating.set(false);
       },
     });
@@ -182,6 +190,52 @@ export class UsersManagementComponent implements OnInit {
         this.loadUsers();
       },
       error: () => this.notify.error('Error al actualizar usuario'),
+    });
+  }
+
+  // ── Password ──
+
+  openPasswordModal(user: User): void {
+    this.editTarget.set(user);
+    this.passwordForm.set({ new_password: '', confirm_password: '' });
+    this.showPasswordModal.set(true);
+  }
+
+  closePasswordModal(): void {
+    this.showPasswordModal.set(false);
+    this.editTarget.set(null);
+  }
+
+  updatePasswordField(field: 'new_password' | 'confirm_password', value: string): void {
+    this.passwordForm.update(current => ({ ...current, [field]: value }));
+  }
+
+  onPasswordSubmit(): void {
+    const target = this.editTarget();
+    if (!target) return;
+
+    const { new_password, confirm_password } = this.passwordForm();
+    if (!new_password || new_password.length < 8) {
+      this.notify.error('La contraseña debe tener al menos 8 caracteres');
+      return;
+    }
+    if (new_password !== confirm_password) {
+      this.notify.error('Las contraseñas no coinciden');
+      return;
+    }
+
+    this.updatingPassword.set(true);
+    this.userService.updatePassword(target.id, new_password).subscribe({
+      next: () => {
+        this.notify.success(`Contraseña de ${target.full_name} actualizada`);
+        this.closePasswordModal();
+        this.updatingPassword.set(false);
+      },
+      error: (err) => {
+        const message = err.error?.detail || 'Error al actualizar contraseña';
+        this.notify.error(message);
+        this.updatingPassword.set(false);
+      },
     });
   }
 
