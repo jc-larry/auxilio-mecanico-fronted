@@ -1,13 +1,13 @@
 <div class="flex min-h-screen bg-background font-body">
 
     <!-- ── Sidebar ── -->
-    <aside class="h-screen w-64 fixed left-0 top-0 bg-slate-100 flex flex-col py-6 px-4 z-50">
+    <aside class="h-screen w-64 fixed left-0 top-0 bg-slate-100 flex flex-col py-6 px-4 z-50 border-r border-outline-variant/30">
 
         <!-- Brand -->
         <div class="mb-10 px-2 flex items-center gap-3">
             <div class="w-10 h-10 machined-gradient rounded-lg flex items-center justify-center shrink-0">
                 <span class="material-symbols-outlined text-on-primary"
-                    style="font-variation-settings:'FILL' 1; font-size:22px;">precision_manufacturing</span>
+                    style="font-variation-settings:'FILL' 1; font-size:22px;">handyman</span>
             </div>
             <div>
                 <h1 class="font-headline font-bold text-on-surface text-lg leading-tight">Auxilio Mecánico</h1>
@@ -16,19 +16,52 @@
         </div>
 
         <!-- Nav -->
-        <nav class="flex-1 space-y-1">
-            <a *ngFor="let item of navItems()" [routerLink]="item.route"
-                routerLinkActive="bg-white text-on-surface shadow-sm scale-[0.98] font-semibold"
-                [routerLinkActiveOptions]="{ exact: true }"
-                class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-headline font-semibold tracking-tight
-                   text-on-surface-variant hover:text-on-surface hover:bg-slate-200/50 transition-all duration-150 active:scale-[0.98]">
-                <span class="material-symbols-outlined" style="font-size:20px;">{{ item.icon }}</span>
-                <span>{{ item.label }}</span>
-            </a>
+        <nav class="flex-1 space-y-1 overflow-y-auto">
+            <div *ngFor="let item of navItems()">
+                <!-- Menu Parent with Children -->
+                <div *ngIf="item.children; else singleItem">
+                    <button (click)="toggleMenu(item.label)"
+                        class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg font-headline font-semibold tracking-tight
+                               text-on-surface-variant hover:text-on-surface hover:bg-slate-200/50 transition-all duration-150 active:scale-[0.98]">
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined" style="font-size:20px;">{{ item.icon }}</span>
+                            <span>{{ item.label }}</span>
+                        </div>
+                        <span class="material-symbols-outlined transition-transform duration-200"
+                            [class.rotate-180]="isExpanded(item.label)" style="font-size:18px;">
+                            expand_more
+                        </span>
+                    </button>
+                    
+                    <!-- Children items -->
+                    <div *ngIf="isExpanded(item.label)" class="mt-1 ml-4 pl-4 border-l border-slate-300/50 space-y-1">
+                        <a *ngFor="let child of item.children" [routerLink]="child.route"
+                            routerLinkActive="text-on-surface font-bold bg-slate-200/30"
+                            [routerLinkActiveOptions]="{ exact: true }"
+                            class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-headline font-medium
+                                   text-on-surface-variant hover:text-on-surface hover:bg-slate-200/40 transition-all duration-150">
+                            <span class="material-symbols-outlined" style="font-size:18px;">{{ child.icon }}</span>
+                            <span>{{ child.label }}</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Single Menu Item -->
+                <ng-template #singleItem>
+                    <a [routerLink]="item.route"
+                        routerLinkActive="bg-white text-on-surface shadow-sm scale-[0.98] font-semibold"
+                        [routerLinkActiveOptions]="{ exact: true }"
+                        class="flex items-center gap-3 px-3 py-2.5 border border-outline-variant/40 rounded-lg font-headline font-semibold tracking-tight
+                               text-on-surface-variant hover:text-on-surface hover:bg-slate-200/50 transition-all duration-150 active:scale-[0.98]">
+                        <span class="material-symbols-outlined" style="font-size:20px;">{{ item.icon }}</span>
+                        <span>{{ item.label }}</span>
+                    </a>
+                </ng-template>
+            </div>
         </nav>
 
         <!-- Bottom actions -->
-        <div class="flex items-center justify-center gap-3 mb-3">
+        <div class="flex items-center justify-center gap-3 mb-4 mt-4">
             <div class="text-right hidden sm:block">
                 <p class="text-sm font-headline font-bold text-on-surface">{{ user()?.full_name }}</p>
                 <p class="text-xs font-headline font-label text-on-surface-variant">{{ user()?.email }}</p>
@@ -38,79 +71,14 @@
                 {{ initials() }}
             </div>
         </div>
-        <button (click)="logout()" class="flex items-center text-sm text-on-surface-variant hover:text-on-surface transition-colors px-3 py-1.5
-                     rounded-lg hover:bg-surface-container border border-transparent hover:border-outline-variant/10">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-            </svg>
+        <button (click)="logout()" class="flex items-center gap-2 text-sm text-error font-bold hover:text-white transition-all px-3 py-2
+                     rounded-lg hover:bg-error border border-error/40 hover:border-error active:scale-[0.98]">
+            <span class="material-symbols-outlined" style="font-size:18px;">logout</span>
             Cerrar sesión
         </button>
-
-        <!-- <div class="mt-auto space-y-1">
-            <button (click)="logout()" class="w-full machined-gradient text-on-primary rounded-lg py-3 px-4 mb-4 font-headline font-bold text-sm
-                   flex items-center justify-center gap-2 ghost-shadow active:scale-[0.98] transition-transform">
-                <span class="material-symbols-outlined" style="font-size:18px;">add</span>
-                Nueva Solicitud
-            </button>
-            <a routerLink="/dashboard/settings"
-                class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:text-on-surface transition-colors font-headline font-semibold text-sm">
-                <span class="material-symbols-outlined" style="font-size:18px;">settings</span>Configuración
-            </a>
-            <a routerLink="/dashboard/support"
-                class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:text-on-surface transition-colors font-headline font-semibold text-sm">
-                <span class="material-symbols-outlined" style="font-size:18px;">help</span>Ayuda
-            </a>
-        </div> -->
     </aside>
-
-    <!-- ── Main area ── -->
+    
     <div class="ml-64 flex flex-col flex-1 min-h-screen">
-
-        <!-- Topbar -->
-        <!-- <header class="sticky top-0 z-40 bg-surface/80 backdrop-blur-md border-b border-outline-variant/10
-                       shadow-sm h-16 px-8 flex justify-between items-center">
-            Search
-            <div class="flex items-center gap-4 flex-1">
-                <div class="relative w-full max-w-md">
-                    <span
-                        class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-sm"
-                        style="font-size:18px;">search</span>
-                    <input class="bg-surface-container-low rounded-full pl-10 pr-4 py-2 w-full text-sm
-                       font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none"
-                        placeholder="Buscar solicitudes, VINs o mecánicos..." type="text" />
-                </div>
-            </div>
-
-            Right controls
-            <div class="flex items-center gap-4">
-                <div class="flex items-center gap-1">
-                    <button
-                        class="p-2 text-on-surface-variant hover:bg-surface-container rounded-full transition-colors relative">
-                        <span class="material-symbols-outlined" style="font-size:20px;">notifications</span>
-                        <span class="absolute top-2 right-2 w-2 h-2 bg-secondary rounded-full"></span>
-                    </button>
-                    <button
-                        class="p-2 text-on-surface-variant hover:bg-surface-container rounded-full transition-colors">
-                        <span class="material-symbols-outlined" style="font-size:20px;">settings</span>
-                    </button>
-                </div>
-                <div class="h-8 w-px bg-outline-variant/40"></div>
-                <div class="flex items-center gap-3">
-                    <div class="text-right">
-                        <p class="text-sm font-headline font-bold text-on-surface">{{ user()?.full_name }}</p>
-                        <p class="text-[10px] text-on-surface-variant font-label uppercase tracking-wide">Admin
-                            Dashboard</p>
-                    </div>
-                    <div class="w-9 h-9 rounded-full machined-gradient flex items-center justify-center
-                          text-on-primary font-headline font-bold text-sm shrink-0">
-                        {{ initials() }}
-                    </div>
-                </div>
-            </div>
-        </header> -->
-
-        <!-- Page content -->
         <main class="flex-1">
             <router-outlet />
         </main>

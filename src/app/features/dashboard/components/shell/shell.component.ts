@@ -6,7 +6,8 @@ import { AuthService } from '../../../../core/services/auth.service';
 interface NavItem {
   label: string;
   icon: string;
-  route: string;
+  route?: string;
+  children?: NavItem[];
   requiredPermission?: string;
   requiredRole?: string;
 }
@@ -24,31 +25,119 @@ export class ShellComponent {
     return name.split(' ').slice(0, 2).map(n => n[0]).join('').toUpperCase();
   });
 
+  expandedMenus = signal<Set<string>>(new Set());
+
   readonly allNavItems: NavItem[] = [
     { label: 'Inicio', icon: 'home', route: '/dashboard/home' },
-    { label: 'Solicitudes', icon: 'build_circle', route: '/dashboard/requests', requiredPermission: 'solicitudes.ver' },
-    { label: 'Personal', icon: 'badge', route: '/dashboard/staff', requiredPermission: 'usuarios.ver' },
-    { label: 'Inventario', icon: 'inventory_2', route: '/dashboard/inventory', requiredPermission: 'inventario.ver' },
-    { label: 'Usuarios', icon: 'manage_accounts', route: '/dashboard/users', requiredRole: 'Administrador' },
-    { label: 'Análiticas', icon: 'analytics', route: '/dashboard/analytics', requiredRole: 'Administrador' },
+    { 
+      label: 'Solicitudes', 
+      icon: 'build_circle', 
+      route: '/dashboard/requests', 
+      requiredPermission: 'solicitudes.ver' 
+    },
+    {
+      label: 'Taller',
+      icon: 'work',
+      requiredPermission: 'usuarios.ver',
+      children: [
+        { 
+          label: 'Gestionar taller', 
+          icon: 'warehouse', 
+          route: '/dashboard/workshops', 
+          requiredRole: 'Administrador, Propietario' 
+        },
+        { 
+          label: 'Gestionar mecánicos', 
+          icon: 'engineering', 
+          route: '/dashboard/staff',
+          requiredPermission: 'usuarios.ver'
+        },
+      ]
+    },
+    {
+      label: 'Inventario',
+      icon: 'inventory_2',
+      requiredPermission: 'inventario.ver',
+      children: [
+        { 
+          label: 'Gestionar stock', 
+          icon: 'list_alt', 
+          route: '/dashboard/inventory',
+          requiredPermission: 'inventario.ver'
+        }
+      ]
+    },
+    {
+      label: 'Usuarios',
+      icon: 'manage_accounts',
+      requiredRole: 'Administrador, Propietario',
+      children: [
+        { 
+          label: 'Gestionar usuarios', 
+          icon: 'person_search', 
+          route: '/dashboard/users',
+          requiredRole: 'Administrador, Propietario'
+        },
+        { 
+          label: 'Gestionar roles', 
+          icon: 'security', 
+          route: '/dashboard/roles',
+          requiredRole: 'Administrador, Propietario'
+        }
+      ]
+    },
+    { 
+      label: 'Análiticas', 
+      icon: 'analytics', 
+      route: '/dashboard/analytics', 
+      requiredRole: 'Administrador, Propietario' 
+    },
   ];
 
   navItems = computed(() => {
     const permissions = this.user()?.permissions || [];
     const roles = this.user()?.roles || [];
-    
-    return this.allNavItems.filter(item => {
-      if (item.requiredPermission && !permissions.includes(item.requiredPermission)) {
-        return false;
-      }
-      if (item.requiredRole && !roles.includes(item.requiredRole) && !roles.includes('Supervisor')) {
-        return false;
-      }
-      return true;
-    });
+
+    const filterItems = (items: NavItem[]): NavItem[] => {
+      return items.reduce((acc: NavItem[], item) => {
+        const hasPermission = !item.requiredPermission || permissions.includes(item.requiredPermission);
+        const hasRole = !item.requiredRole || 
+                         item.requiredRole.split(',').some(r => roles.includes(r.trim())) || 
+                         roles.includes('Propietario');
+
+        if (hasPermission && hasRole) {
+          if (item.children) {
+            const filteredChildren = filterItems(item.children);
+            // Hide parent if it has children defined but none are accessible
+            if (filteredChildren.length > 0) {
+              acc.push({ ...item, children: filteredChildren });
+            }
+          } else {
+            acc.push(item);
+          }
+        }
+        return acc;
+      }, []);
+    };
+
+    return filterItems(this.allNavItems);
   });
 
   constructor(private authService: AuthService, private router: Router) { }
+
+  toggleMenu(label: string): void {
+    const current = new Set(this.expandedMenus());
+    if (current.has(label)) {
+      current.delete(label);
+    } else {
+      current.add(label);
+    }
+    this.expandedMenus.set(current);
+  }
+
+  isExpanded(label: string): boolean {
+    return this.expandedMenus().has(label);
+  }
 
   logout(): void { this.authService.logout(); }
 }
