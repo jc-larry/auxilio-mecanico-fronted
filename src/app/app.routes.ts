@@ -10,7 +10,7 @@ export const routes: Routes = [
   },
   {
     path: 'dashboard',
-    loadChildren: () => import('./features/dashboard/dashboard.routes').then(m => m.DASHBOARD_ROUTES),
+    loadChildren: () => import('./features/features.routes').then(m => m.FEATURES_ROUTES),
   },
   { path: '**', redirectTo: 'auth/login' },
 ];
