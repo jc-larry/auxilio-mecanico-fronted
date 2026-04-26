@@ -55,12 +55,13 @@
                     }}%</span>
             </div>
         </div>
-        <div class="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant/50 ghost-shadow border-l-4 border-secondary">
-            <p class="text-[11px] font-bold uppercase tracking-wider text-on-secondary/70 font-label mb-2">Críticas</p>
+        <div
+            class="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant/50 ghost-shadow border-l-4 border-secondary">
+            <p class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label mb-2">Críticas</p>
             <div class="flex items-center justify-between">
-                <span class="font-headline font-extrabold text-4xl text-on-secondary">{{
+                <span class="font-headline font-extrabold text-4xl text-on-surface">{{
                     stats().critical_count.toString().padStart(2, '0') }}</span>
-                <span class="material-symbols-outlined text-on-secondary/80"
+                <span class="material-symbols-outlined text-secondary/80"
                     style="font-size:32px; font-variation-settings:'FILL' 1;">warning</span>
             </div>
         </div>
@@ -73,7 +74,7 @@
 
     <!-- Empty state -->
     <div *ngIf="!loading() && requests().length === 0"
-        class="bg-surface-container-lowest rounded-xl p-16 ghost-shadow flex flex-col items-center justify-center text-center">
+        class="bg-surface-container-lowest rounded-xl border border-outline-variant/50 p-16 ghost-shadow flex flex-col items-center justify-center text-center">
         <span class="material-symbols-outlined text-on-surface-variant mb-4" style="font-size:56px;">inbox</span>
         <h3 class="font-headline font-bold text-on-surface text-xl mb-1">Sin solicitudes</h3>
         <p class="text-on-surface-variant text-sm font-body mb-6">No se encontraron solicitudes con los filtros
