@@ -3,7 +3,7 @@
     <!-- ── KPI row ── -->
     <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-        <div class="bg-surface-container-lowest rounded-xl p-6 ghost-shadow flex items-center justify-between">
+        <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/50 ghost-shadow flex items-center justify-between">
             <div>
                 <p class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label mb-1">
                     Trabajos Activos</p>
@@ -20,7 +20,7 @@
             </div>
         </div>
 
-        <div class="bg-surface-container-lowest rounded-xl p-6 ghost-shadow flex items-center justify-between">
+        <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/50 ghost-shadow flex items-center justify-between">
             <div>
                 <p class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label mb-1">
                     Mecánicos Disponibles</p>
@@ -36,7 +36,7 @@
         </div>
 
         <div
-            class="bg-surface-container-lowest rounded-xl p-6 ghost-shadow flex items-center justify-between border-l-4 border-secondary">
+            class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/50 ghost-shadow flex items-center justify-between border-l-4 border-secondary">
             <div>
                 <p class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label mb-1">
                     Trabajos Completados</p>
@@ -55,7 +55,7 @@
             <h2 class="font-headline font-bold text-2xl text-on-surface">Últimas Solicitudes</h2>
             <div class="flex gap-2">
                 <button [routerLink]="['/dashboard/service-requests']"
-                    class="px-4 py-2 bg-surface-container text-on-surface-variant rounded-full text-xs font-bold font-label hover:bg-surface-container-high transition-colors">
+                    class="px-4 py-2 bg-surface-container text-on-surface-variant rounded-full text-xs font-bold font-label border border-outline-variant/40 hover:bg-surface-container-high transition-colors">
                     Ver Todo
                 </button>
             </div>
@@ -63,7 +63,7 @@
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
             <div *ngFor="let req of requests()"
-                class="bg-surface-container-lowest rounded-xl overflow-hidden ghost-shadow">
+                class="bg-surface-container-lowest rounded-xl overflow-hidden border border-outline-variant/60 ghost-shadow">
                 <!-- Banner gradient -->
                 <div class="h-36 relative" [style.background]="getGradient(req.priority)">
                     <div class="absolute top-3 left-3 flex gap-2">
@@ -112,13 +112,13 @@
                             Aceptar Trabajo
                         </button>
                         <button (click)="onRejectJob(req)"
-                            class="px-4 text-xs font-bold rounded-lg py-2.5 bg-surface-container text-on-surface font-label hover:bg-surface-container-high transition-colors">
+                            class="px-4 text-xs font-bold rounded-lg py-2.5 bg-surface-container text-on-surface font-label border-none hover:bg-surface-container-high transition-colors">
                             Rechazar
                         </button>
                     </div>
 
                     <button *ngIf="req.status !== 'PENDIENTE'"
-                        class="w-full bg-surface-container-low text-primary text-xs font-bold rounded-lg py-2.5 font-label flex items-center justify-center gap-2 hover:bg-surface-container transition-colors"
+                        class="w-full bg-surface-container-low text-primary text-xs font-bold rounded-lg py-2.5 font-label border border-outline-variant/40 flex items-center justify-center gap-2 hover:bg-surface-container transition-colors"
                         [routerLink]="['/dashboard/service-requests']">
                         <span class="material-symbols-outlined" style="font-size:14px;">visibility</span>
                         Ver Detalles
@@ -127,17 +127,16 @@
             </div>
 
             <div *ngIf="requests().length === 0"
-                class="col-span-3 bg-surface-container-lowest rounded-xl p-8 text-center text-on-surface-variant font-bold text-sm ghost-shadow">
+                class="col-span-3 bg-surface-container-lowest rounded-xl border border-outline-variant/60 p-8 text-center text-on-surface-variant font-bold text-sm ghost-shadow">
                 No hay solicitudes recientes en el sistema.
             </div>
         </div>
     </section>
 
-    <!-- ── Bottom row: technicians + inventory watch ── -->
-    <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <section class="grid grid-cols-1 lg:grid-cols-1 gap-6">
 
         <!-- Technician status table -->
-        <div class="lg:col-span-2 bg-surface-container-lowest rounded-xl ghost-shadow overflow-hidden">
+        <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/60 ghost-shadow overflow-hidden">
             <div class="flex items-center justify-between px-6 py-5">
                 <h3 class="font-headline font-bold text-on-surface text-lg">Estado de Técnicos</h3>
                 <button [routerLink]="['/dashboard/staff']"
@@ -177,39 +176,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Inventory watch -->
-        <div class="machined-gradient rounded-xl p-6 ghost-shadow flex flex-col gap-5">
-            <div class="flex items-center gap-3">
-                <span class="material-symbols-outlined text-secondary"
-                    style="font-size:22px; font-variation-settings:'FILL' 1;">inventory_2</span>
-                <h3 class="font-headline font-bold text-on-primary text-lg">Vigilancia de Inventario</h3>
-            </div>
-
-            <div *ngFor="let item of inventoryAlerts()" class="space-y-2">
-                <div class="flex items-center justify-between">
-                    <span class="text-[10px] uppercase tracking-widest text-on-primary/50 font-label font-bold">{{
-                        item.name }}</span>
-                    <span class="text-[10px] font-bold font-label text-on-tertiary-container">
-                        Crítico ({{ item.quantity }} left)
-                    </span>
-                </div>
-                <div class="h-1.5 rounded-full bg-white/10 overflow-hidden">
-                    <div class="h-full rounded-full transition-all bg-secondary-container"
-                        [style.width.%]="(item.quantity / item.min_stock) * 100"></div>
-                </div>
-                <p class="text-[11px] text-on-primary/40 font-body">SKU: {{ item.sku }} | Min: {{ item.min_stock }}</p>
-            </div>
-
-            <div *ngIf="inventoryAlerts().length === 0" class="text-sm text-emerald-400 font-bold">
-                Todo el inventario está estable.
-            </div>
-
-            <button [routerLink]="['/dashboard/inventory']" class="mt-auto w-full bg-white/10 hover:bg-white/15 text-on-primary font-bold text-sm
-                         rounded-lg py-3 font-label transition-colors flex items-center justify-center gap-2">
-                Gestión de Inventario
-            </button>
-        </div>
     </section>
 </div>
 
@@ -234,8 +200,8 @@
                 </label>
                 <input type="text" [ngModel]="assignMechanicName()" (ngModelChange)="assignMechanicName.set($event)"
                     placeholder="Ej: Carlos Rodríguez" (keydown.enter)="onAssignSubmit()"
-                    class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body
-                           focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface" />
+                    class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body border border-outline-variant/40
+                           focus:ring-2 focus:ring-primary/20 transition-all outline-none text-on-surface" />
             </div>
 
             <div class="flex items-center justify-end gap-3">

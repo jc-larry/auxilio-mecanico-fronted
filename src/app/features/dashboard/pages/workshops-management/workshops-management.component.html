@@ -1,0 +1,231 @@
+<div class="p-8 max-w-7xl mx-auto font-body">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <div>
+            <h1 class="text-3xl font-headline font-bold text-on-surface tracking-tight mb-1">Gestionar Talleres</h1>
+            <p class="text-on-surface-variant text-sm font-body">Configuración y administración de sedes físicas</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <button (click)="loadWorkshops()"
+                class="h-10 w-10 flex items-center justify-center rounded-lg border-none text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors">
+                <span class="material-symbols-outlined" style="font-size:20px;">refresh</span>
+            </button>
+            <button (click)="openCreateModal()"
+                class="h-10 px-5 machined-gradient text-on-primary rounded-lg font-headline font-semibold text-sm flex items-center gap-2 hover:shadow-md transition-all active:scale-[0.98]">
+                <span class="material-symbols-outlined" style="font-size:20px;">add_business</span>
+                Nuevo Taller
+            </button>
+        </div>
+    </div>
+
+    <!-- Table Section -->
+    <div class="bg-surface rounded-2xl border border-outline-variant/60 shadow-sm overflow-hidden mb-6">
+        <div class="overflow-x-auto min-h-[400px]">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-surface-container-low/50">
+                        <th class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/60">ID</th>
+                        <th class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/60">Nombre</th>
+                        <th class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/60">Dirección</th>
+                        <th class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/60">Contacto</th>
+                        <th class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/60 text-center">Estado</th>
+                        <th class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/60 text-right">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngIf="loading()">
+                        <td colspan="6" class="py-12 text-center text-on-surface-variant">
+                            <span class="material-symbols-outlined animate-spin" style="font-size: 32px;">progress_activity</span>
+                            <p class="mt-2 text-sm">Cargando sedes...</p>
+                        </td>
+                    </tr>
+                    <tr *ngIf="!loading() && workshops().length === 0">
+                        <td colspan="6" class="py-12 text-center text-on-surface-variant">
+                            <span class="material-symbols-outlined mb-2" style="font-size: 32px; opacity: 0.5;">storefront</span>
+                            <p class="text-sm">No hay talleres registrados</p>
+                        </td>
+                    </tr>
+                    <tr *ngFor="let w of workshops()" class="group hover:bg-surface-container-lowest/50 transition-colors border-b border-outline-variant/50 last:border-0">
+                        <td class="py-4 px-5">
+                            <span class="text-xs font-mono text-on-surface-variant font-bold">#{{ w.id }}</span>
+                        </td>
+                        <td class="py-4 px-5">
+                            <p class="font-headline font-bold text-sm text-on-surface">{{ w.nombre }}</p>
+                        </td>
+                        <td class="py-4 px-5">
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-secondary" style="font-size:16px;">location_on</span>
+                                <p class="text-xs text-on-surface-variant max-w-[200px] truncate">{{ w.direccion }}</p>
+                            </div>
+                        </td>
+                        <td class="py-4 px-5">
+                            <p class="text-xs text-on-surface-variant">{{ w.telefono }}</p>
+                        </td>
+                        <td class="py-4 px-5 text-center">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase"
+                                [ngClass]="w.estado ? 'bg-emerald-500/10 text-emerald-600' : 'bg-red-500/10 text-red-600'">
+                                {{ w.estado ? 'Operativo' : 'Cerrado' }}
+                            </span>
+                        </td>
+                        <td class="py-4 px-5 text-right">
+                            <div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button (click)="openEditModal(w)"
+                                    class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-surface-container text-on-surface-variant hover:text-primary transition-colors"
+                                    title="Editar">
+                                    <span class="material-symbols-outlined" style="font-size: 18px;">edit</span>
+                                </button>
+                                <button (click)="onDelete(w)"
+                                    class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-red-500/10 text-on-surface-variant hover:text-red-500 transition-colors"
+                                    title="Eliminar">
+                                    <span class="material-symbols-outlined" style="font-size: 18px;">delete</span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Create Modal -->
+<div *ngIf="showCreateModal()" class="fixed inset-0 z-[100] flex items-center justify-center p-4"
+    (click)="closeCreateModal()">
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+    <div class="relative bg-surface-container-lowest rounded-2xl border border-outline-variant/60 ghost-shadow w-full max-w-lg max-h-[90vh] overflow-y-auto"
+        (click)="$event.stopPropagation()">
+        <div class="flex items-center justify-between p-6 border-b border-outline-variant/50">
+            <div>
+                <h2 class="font-headline font-bold text-on-surface text-xl">Registrar Taller</h2>
+            </div>
+            <button (click)="closeCreateModal()"
+                class="p-2 text-on-surface-variant hover:bg-surface-container rounded-lg transition-colors border-none">
+                <span class="material-symbols-outlined" style="font-size:20px;">close</span>
+            </button>
+        </div>
+        <div class="p-6 space-y-4">
+            <div class="flex flex-col gap-1.5">
+                <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Nombre</label>
+                <input [ngModel]="newWorkshop().nombre" (ngModelChange)="updateCreateField('nombre', $event)"
+                    type="text"
+                    class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface">
+            </div>
+            <div class="flex flex-col gap-1.5">
+                <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Dirección</label>
+                <input [ngModel]="newWorkshop().direccion" (ngModelChange)="updateCreateField('direccion', $event)"
+                    type="text"
+                    class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface">
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Teléfono</label>
+                    <input [ngModel]="newWorkshop().telefono" (ngModelChange)="updateCreateField('telefono', $event)"
+                        type="text"
+                        class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface">
+                </div>
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Estado</label>
+                    <select [ngModel]="newWorkshop().estado" (ngModelChange)="updateCreateField('estado', $event)"
+                        class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface appearance-none">
+                        <option [ngValue]="true">Operativo</option>
+                        <option [ngValue]="false">Inactivo</option>
+                    </select>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Latitud</label>
+                    <input [ngModel]="newWorkshop().latitud" (ngModelChange)="updateCreateField('latitud', $event)"
+                        type="number" step="0.000001"
+                        class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface">
+                </div>
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Longitud</label>
+                    <input [ngModel]="newWorkshop().longitud" (ngModelChange)="updateCreateField('longitud', $event)"
+                        type="number" step="0.000001"
+                        class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface">
+                </div>
+            </div>
+        </div>
+        <div class="flex items-center justify-end gap-3 p-6 border-t border-outline-variant/50">
+            <button (click)="closeCreateModal()"
+                class="px-5 py-2.5 text-sm font-bold font-label text-on-surface-variant hover:bg-surface-container rounded-lg transition-colors">Cancelar</button>
+            <button [disabled]="submitting()" (click)="onCreateSubmit()"
+                class="machined-gradient text-on-primary px-6 py-2.5 rounded-lg text-sm font-bold font-label ghost-shadow active:scale-[0.98] transition-transform disabled:opacity-50 flex items-center gap-2">
+                <span *ngIf="submitting()" class="material-symbols-outlined animate-spin" style="font-size:16px;">progress_activity</span>
+                {{ submitting() ? 'Guardando...' : 'Registrar' }}
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div *ngIf="showEditModal()" class="fixed inset-0 z-[100] flex items-center justify-center p-4"
+    (click)="closeEditModal()">
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+    <div class="relative bg-surface-container-lowest rounded-2xl border border-outline-variant/60 ghost-shadow w-full max-w-lg max-h-[90vh] overflow-y-auto"
+        (click)="$event.stopPropagation()">
+        <div class="flex items-center justify-between p-6 border-b border-outline-variant/50">
+            <div>
+                <h2 class="font-headline font-bold text-on-surface text-xl">Editar Taller</h2>
+            </div>
+            <button (click)="closeEditModal()"
+                class="p-2 text-on-surface-variant hover:bg-surface-container rounded-lg transition-colors border-none">
+                <span class="material-symbols-outlined" style="font-size:20px;">close</span>
+            </button>
+        </div>
+        <div class="p-6 space-y-4">
+            <div class="flex flex-col gap-1.5">
+                <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Nombre</label>
+                <input [ngModel]="editForm().nombre" (ngModelChange)="updateEditField('nombre', $event)"
+                    type="text"
+                    class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface">
+            </div>
+            <div class="flex flex-col gap-1.5">
+                <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Dirección</label>
+                <input [ngModel]="editForm().direccion" (ngModelChange)="updateEditField('direccion', $event)"
+                    type="text"
+                    class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface">
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Teléfono</label>
+                    <input [ngModel]="editForm().telefono" (ngModelChange)="updateEditField('telefono', $event)"
+                        type="text"
+                        class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface">
+                </div>
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Estado</label>
+                    <select [ngModel]="editForm().estado" (ngModelChange)="updateEditField('estado', $event)"
+                        class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface appearance-none">
+                        <option [ngValue]="true">Operativo</option>
+                        <option [ngValue]="false">Inactivo</option>
+                    </select>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Latitud</label>
+                    <input [ngModel]="editForm().latitud" (ngModelChange)="updateEditField('latitud', $event)"
+                        type="number" step="0.000001"
+                        class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface">
+                </div>
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Longitud</label>
+                    <input [ngModel]="editForm().longitud" (ngModelChange)="updateEditField('longitud', $event)"
+                        type="number" step="0.000001"
+                        class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface">
+                </div>
+            </div>
+        </div>
+        <div class="flex items-center justify-end gap-3 p-6 border-t border-outline-variant/50">
+            <button (click)="closeEditModal()"
+                class="px-5 py-2.5 text-sm font-bold font-label text-on-surface-variant hover:bg-surface-container rounded-lg transition-colors">Cancelar</button>
+            <button [disabled]="submitting()" (click)="onEditSubmit()"
+                class="machined-gradient text-on-primary px-6 py-2.5 rounded-lg text-sm font-bold font-label ghost-shadow active:scale-[0.98] transition-transform disabled:opacity-50 flex items-center gap-2">
+                <span *ngIf="submitting()" class="material-symbols-outlined animate-spin" style="font-size:16px;">progress_activity</span>
+                {{ submitting() ? 'Guardando...' : 'Guardar Cambios' }}
+            </button>
+        </div>
+    </div>
+</div>

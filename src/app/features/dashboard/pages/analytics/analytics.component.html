@@ -1,4 +1,4 @@
-<div class="p-8 bg-background min-h-full space-y-8">
+<div class="p-8 max-w-7xl mx-auto font-body space-y-8">
 
     <!-- Header -->
     <div>
@@ -13,12 +13,12 @@
 
     <!-- ═══ Summary KPIs ═══ -->
     <section *ngIf="!loading()" class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="bg-surface-container-lowest rounded-xl p-5 ghost-shadow">
+        <div class="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant/50 ghost-shadow">
             <p class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label mb-2">Solicitudes Totales</p>
             <span class="font-headline font-extrabold text-3xl text-on-surface">{{ summary().total_requests }}</span>
             <p class="text-xs text-on-surface-variant font-body mt-1">{{ summary().active_requests }} activas · {{ summary().completed_requests }} completadas</p>
         </div>
-        <div class="bg-surface-container-lowest rounded-xl p-5 ghost-shadow">
+        <div class="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant/50 ghost-shadow">
             <p class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label mb-2">Equipo Técnico</p>
             <div class="flex items-baseline gap-1">
                 <span class="font-headline font-extrabold text-3xl text-on-surface">{{ summary().available_mechanics }}</span>
@@ -26,7 +26,7 @@
             </div>
             <p class="text-xs text-emerald-600 font-semibold font-label mt-1">Disponibles ahora</p>
         </div>
-        <div class="bg-surface-container-lowest rounded-xl p-5 ghost-shadow">
+        <div class="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant/50 ghost-shadow">
             <p class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label mb-2">Inventario</p>
             <span class="font-headline font-extrabold text-3xl text-on-surface">{{ summary().total_parts }}</span>
             <p class="text-xs font-body mt-1"
@@ -34,7 +34,7 @@
                 {{ summary().critical_parts > 0 ? summary().critical_parts + ' en nivel crítico' : 'Sin alertas' }}
             </p>
         </div>
-        <div class="bg-surface-container-lowest rounded-xl p-5 ghost-shadow">
+        <div class="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant/50 ghost-shadow">
             <p class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label mb-2">Valor del Inventario</p>
             <span class="font-headline font-extrabold text-3xl text-on-surface">{{ formatCurrency(summary().inventory_value) }}</span>
         </div>
@@ -44,7 +44,7 @@
     <section *ngIf="!loading()" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
         <!-- ── Bar chart: Solicitudes por día ── -->
-        <div class="lg:col-span-8 bg-surface-container-lowest rounded-xl p-6 ghost-shadow">
+        <div class="lg:col-span-8 bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/50 ghost-shadow">
             <div class="flex justify-between items-start mb-6">
                 <div>
                     <h2 class="font-headline font-bold text-on-surface text-xl">Solicitudes por Día</h2>
@@ -77,7 +77,7 @@
         </div>
 
         <!-- ── Donut chart: Distribución por tipo ── -->
-        <div class="lg:col-span-4 bg-surface-container-lowest rounded-xl p-6 ghost-shadow flex flex-col">
+        <div class="lg:col-span-4 bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/50 ghost-shadow flex flex-col">
             <h2 class="font-headline font-bold text-on-surface text-xl mb-0.5">Tipos de Servicio</h2>
             <p class="text-sm text-on-surface-variant font-body mb-6">Distribución de solicitudes</p>
 
@@ -115,13 +115,13 @@
     <section *ngIf="!loading()" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
         <!-- ── Status breakdown ── -->
-        <div class="lg:col-span-4 bg-surface-container-lowest rounded-xl p-6 ghost-shadow">
+        <div class="lg:col-span-4 bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/50 ghost-shadow">
             <h2 class="font-headline font-bold text-on-surface text-xl mb-1">Estado de Solicitudes</h2>
             <p class="text-sm text-on-surface-variant font-body mb-6">Desglose por estado actual</p>
 
             <table class="w-full text-left border-collapse mt-4">
                 <tbody>
-                    <tr *ngFor="let s of requestsByStatus()" class="border-b border-outline-variant/10 last:border-0 hover:bg-surface-container-lowest/50 transition-colors">
+                    <tr *ngFor="let s of requestsByStatus()" class="border-b border-outline-variant/50 last:border-0 hover:bg-surface-container-lowest/50 transition-colors">
                         <td class="py-3 px-2 w-12">
                             <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 shadow-sm"
                                 [style.background]="s.color + '20'">
@@ -143,7 +143,7 @@
         </div>
 
         <!-- ── Mechanic workload ── -->
-        <div class="lg:col-span-4 bg-surface-container-lowest rounded-xl p-6 ghost-shadow">
+        <div class="lg:col-span-4 bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/50 ghost-shadow">
             <h2 class="font-headline font-bold text-on-surface text-xl mb-1">Carga de Trabajo</h2>
             <p class="text-sm text-on-surface-variant font-body mb-6">Solicitudes asignadas por mecánico</p>
 
@@ -155,7 +155,7 @@
 
             <table class="w-full text-left border-collapse mt-4">
                 <tbody>
-                    <tr *ngFor="let mec of mechanicWorkload()" class="border-b border-outline-variant/10 last:border-0 hover:bg-surface-container-lowest/50 transition-colors">
+                    <tr *ngFor="let mec of mechanicWorkload()" class="border-b border-outline-variant/50 last:border-0 hover:bg-surface-container-lowest/50 transition-colors">
                         <td class="py-3 px-2 w-12">
                             <div class="w-10 h-10 rounded-full machined-gradient flex items-center justify-center text-on-primary font-headline font-bold text-sm shadow-sm shrink-0">
                                 {{ mec.initials }}
@@ -178,7 +178,7 @@
         </div>
 
         <!-- ── Inventory by system ── -->
-        <div class="lg:col-span-4 bg-surface-container-lowest rounded-xl p-6 ghost-shadow">
+        <div class="lg:col-span-4 bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/50 ghost-shadow">
             <h2 class="font-headline font-bold text-on-surface text-xl mb-1">Inventario por Sistema</h2>
             <p class="text-sm text-on-surface-variant font-body mb-6">Unidades en stock agrupadas</p>
 
@@ -190,7 +190,7 @@
 
             <table class="w-full text-left border-collapse mt-4">
                 <tbody>
-                    <tr *ngFor="let inv of inventoryBySystem()" class="border-b border-outline-variant/10 last:border-0 hover:bg-surface-container-lowest/50 transition-colors">
+                    <tr *ngFor="let inv of inventoryBySystem()" class="border-b border-outline-variant/50 last:border-0 hover:bg-surface-container-lowest/50 transition-colors">
                         <td class="py-3 px-2">
                             <p class="text-sm font-bold text-on-surface font-headline">{{ inv.label }}</p>
                             <p class="text-xs text-on-surface-variant font-body">{{ inv.item_count }} artículo(s)</p>

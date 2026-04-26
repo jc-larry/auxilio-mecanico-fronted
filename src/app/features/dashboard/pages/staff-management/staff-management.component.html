@@ -1,53 +1,40 @@
-<div class="p-8 bg-background min-h-full">
+<div class="p-8 max-w-7xl mx-auto font-body">
 
     <!-- Header -->
-    <div class="flex items-end justify-between mb-8">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-            <h1 class="font-headline font-extrabold text-on-surface text-3xl">Personal</h1>
-            <p class="text-on-surface-variant mt-1 text-sm font-body">
-                Gestión de mecánicos
-            </p>
+            <h1 class="text-3xl font-headline font-bold text-on-surface tracking-tight mb-1">Personal</h1>
+            <p class="text-on-surface-variant text-sm font-body">Gestión de mecánicos</p>
         </div>
-        <button (click)="openCreateModal()" class="machined-gradient text-on-primary px-6 py-3 rounded-lg font-headline font-bold text-sm
-                   flex items-center gap-2 ghost-shadow active:scale-[0.98] transition-transform">
-            <span class="material-symbols-outlined"
-                style="font-size:18px; font-variation-settings:'FILL' 1;">person_add</span>
-            Agregar Mecánico
-        </button>
+        <div class="flex items-center gap-3">
+            <button (click)="openCreateModal()"
+                class="h-10 px-5 machined-gradient text-on-primary rounded-lg font-headline font-semibold text-sm flex items-center gap-2 hover:shadow-md transition-all active:scale-[0.98]">
+                <span class="material-symbols-outlined" style="font-size:18px;">person_add</span>
+                Agregar Mecánico
+            </button>
+        </div>
     </div>
 
     <!-- Summary cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-10">
-        <div class="bg-surface-container-lowest rounded-xl p-6 ghost-shadow">
-            <p class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label mb-3">
-                Disponibles</p>
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div class="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant/50 ghost-shadow">
+            <p class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label mb-2">Disponibles</p>
             <div class="flex items-baseline gap-1">
                 <span class="font-headline font-extrabold text-3xl text-on-surface">{{ stats().available }}</span>
-                <span class="font-headline font-bold text-xl text-on-surface-variant"> / {{ stats().total }}</span>
+                <span class="font-headline font-bold text-xl text-on-surface-variant">/ {{ stats().total }}</span>
             </div>
             <p class="mt-3 flex items-center gap-2 text-sm font-semibold font-label"
                 [class]="stats().available === stats().total ? 'text-emerald-600' : 'text-on-surface-variant'">
                 <span class="material-symbols-outlined" style="font-size:15px; font-variation-settings:'FILL' 1;">
                     {{ stats().available === stats().total ? 'trending_up' : 'info' }}
                 </span>
-                {{ stats().available === stats().total ? 'Todo el equipo disponible' : stats().unavailable + ' no
-                disponible(s)' }}
+                {{ stats().available === stats().total ? 'Todo el equipo disponible' : stats().unavailable + ' no disponible(s)' }}
             </p>
         </div>
 
-        <!-- <div class="bg-surface-container-lowest rounded-xl p-6 ghost-shadow">
-            <p class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label mb-3">Especialidad Principal</p>
-            <h3 class="font-headline font-extrabold text-3xl text-on-surface">{{ stats().top_specialty }}</h3>
-            <p class="mt-3 flex items-center gap-2 text-sm text-on-surface-variant font-body">
-                <span class="material-symbols-outlined" style="font-size:15px;">group</span>
-                {{ stats().top_specialty_count }} especialista(s)
-            </p>
-        </div> -->
-
-        <div class="bg-surface-container-lowest rounded-xl p-6 ghost-shadow flex items-center justify-between">
+        <div class="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant/50 ghost-shadow flex items-center justify-between">
             <div>
-                <p class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label mb-3">No
-                    Disponibles</p>
+                <p class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label mb-2">No Disponibles</p>
                 <h3 class="font-headline font-extrabold text-3xl"
                     [class]="stats().unavailable > 0 ? 'text-secondary' : 'text-emerald-600'">
                     {{ stats().unavailable }}
@@ -69,32 +56,32 @@
 
     <!-- Empty state -->
     <div *ngIf="!loading() && staff().length === 0"
-        class="bg-surface-container-lowest rounded-xl p-16 ghost-shadow flex flex-col items-center justify-center text-center">
+        class="bg-surface-container-lowest rounded-xl p-16 border border-outline-variant/50 ghost-shadow flex flex-col items-center justify-center text-center">
         <span class="material-symbols-outlined text-on-surface-variant mb-4" style="font-size:56px;">groups</span>
         <h3 class="font-headline font-bold text-on-surface text-xl mb-1">Sin personal registrado</h3>
         <p class="text-on-surface-variant text-sm font-body mb-6">Agrega mecánicos al equipo para comenzar.</p>
-        <button (click)="openCreateModal()" class="machined-gradient text-on-primary px-6 py-3 rounded-lg text-sm font-bold font-label
-                   flex items-center gap-2 ghost-shadow active:scale-[0.98] transition-transform">
+        <button (click)="openCreateModal()"
+            class="h-10 px-5 machined-gradient text-on-primary rounded-lg font-headline font-semibold text-sm flex items-center gap-2 hover:shadow-md transition-all active:scale-[0.98]">
             <span class="material-symbols-outlined" style="font-size:18px;">person_add</span>
             Agregar Primer Mecánico
         </button>
     </div>
 
     <!-- Staff table -->
-    <div *ngIf="!loading() && staff().length > 0" class="bg-surface rounded-2xl border border-outline-variant/20 shadow-sm overflow-hidden mb-6">
+    <div *ngIf="!loading() && staff().length > 0" class="bg-surface rounded-2xl border border-outline-variant/60 shadow-sm overflow-hidden mb-6">
         <div class="overflow-x-auto min-h-[400px]">
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-surface-container-low/50">
-                        <th class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/20">Datos del Mecánico</th>
-                        <th class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/20">Especialidad</th>
-                        <th class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/20">Nivel</th>
-                        <th class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/20 text-center">Estado</th>
-                        <th class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/20 text-right">Acciones</th>
+                        <th class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/60">Datos del Mecánico</th>
+                        <th class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/60">Especialidad</th>
+                        <th class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/60">Nivel</th>
+                        <th class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/60 text-center">Estado</th>
+                        <th class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/60 text-right">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let member of staff()" class="group hover:bg-surface-container-lowest/50 transition-colors border-b border-outline-variant/10 last:border-0 cursor-pointer relative"
+                    <tr *ngFor="let member of staff()" class="group hover:bg-surface-container-lowest/50 transition-colors border-b border-outline-variant/50 last:border-0 cursor-pointer relative"
                         [style.border-left]="'4px solid ' + (member.is_available ? '#10b981' : '#cbd5e1')">
 
                         <!-- Name & avatar -->
@@ -105,16 +92,14 @@
                                         [style.background]="member.avatar_color">
                                         {{ member.initials }}
                                     </div>
-                                    <span
-                                        class="absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white flex items-center justify-center"
+                                    <span class="absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white flex items-center justify-center"
                                         [class]="member.is_available ? 'bg-emerald-500' : 'bg-outline'">
                                         <span *ngIf="member.is_available"
                                             class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-50"></span>
                                     </span>
                                 </div>
                                 <div>
-                                    <p class="font-headline font-bold text-sm text-on-surface leading-tight">{{ member.full_name }}
-                                    </p>
+                                    <p class="font-headline font-bold text-sm text-on-surface leading-tight">{{ member.full_name }}</p>
                                     <p class="text-xs text-on-surface-variant font-body">ID: {{ member.employee_code }}</p>
                                 </div>
                             </div>
@@ -133,7 +118,7 @@
                         <td class="py-4 px-5">
                             <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded border tracking-wide" [ngClass]="{
                                 'bg-primary/10 text-primary border-primary/20': member.expertise === 'SENIOR',
-                                'bg-surface-container-highest text-on-surface border-outline-variant/30': member.expertise === 'INTERMEDIO',
+                                'bg-surface-container-highest text-on-surface border-outline-variant/70': member.expertise === 'INTERMEDIO',
                                 'bg-secondary/10 text-secondary border-secondary/20': member.expertise === 'JUNIOR'
                             }">
                                 {{ member.expertise_label }}
@@ -173,27 +158,29 @@
                 </tbody>
             </table>
         </div>
-    </div>
-
-    <!-- Pagination -->
-    <div *ngIf="!loading() && staff().length > 0" class="flex items-center justify-between mt-6">
-        <p class="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant font-label">
-            Mostrando {{ staff().length }} de {{ totalItems() }} mecánicos
-        </p>
-        <div class="flex items-center gap-1">
-            <button (click)="onPageChange(currentPage() - 1)" [disabled]="currentPage() === 1"
-                class="w-8 h-8 flex items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors disabled:opacity-30">
-                <span class="material-symbols-outlined" style="font-size:16px;">chevron_left</span>
-            </button>
-            <button *ngFor="let p of pages()" (click)="onPageChange(p)"
-                class="w-8 h-8 flex items-center justify-center rounded-lg text-sm font-bold font-label transition-colors"
-                [class]="p === currentPage() ? 'machined-gradient text-on-primary' : 'text-on-surface-variant hover:bg-surface-container'">
-                {{ p }}
-            </button>
-            <button (click)="onPageChange(currentPage() + 1)" [disabled]="currentPage() === totalPages()"
-                class="w-8 h-8 flex items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors disabled:opacity-30">
-                <span class="material-symbols-outlined" style="font-size:16px;">chevron_right</span>
-            </button>
+        <!-- Pagination -->
+        <div class="p-4 border-t border-outline-variant/50 flex items-center justify-between bg-surface-container-lowest">
+            <p class="text-xs text-on-surface-variant font-label">Página {{ currentPage() }} de {{ totalPages() }}</p>
+            <div class="flex gap-1">
+                <button [disabled]="currentPage() === 1" (click)="onPageChange(currentPage() - 1)"
+                    class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant/70 text-on-surface hover:bg-surface-container disabled:opacity-50 disabled:hover:bg-transparent transition-colors">
+                    <span class="material-symbols-outlined" style="font-size:18px;">chevron_left</span>
+                </button>
+                <ng-container *ngFor="let p of pages()">
+                    <button *ngIf="p === 1 || p === totalPages() || (p >= currentPage() - 1 && p <= currentPage() + 1)"
+                        (click)="onPageChange(p)"
+                        class="w-8 h-8 flex items-center justify-center rounded font-label text-sm transition-colors"
+                        [ngClass]="p === currentPage() ? 'machined-gradient text-on-primary font-bold border-transparent' : 'border border-outline-variant/70 text-on-surface hover:bg-surface-container'">
+                        {{ p }}
+                    </button>
+                    <span *ngIf="p === currentPage() - 2 && p > 1 || p === currentPage() + 2 && p < totalPages()"
+                        class="w-8 h-8 flex items-center justify-center text-on-surface-variant">...</span>
+                </ng-container>
+                <button [disabled]="currentPage() === totalPages()" (click)="onPageChange(currentPage() + 1)"
+                    class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant/70 text-on-surface hover:bg-surface-container disabled:opacity-50 disabled:hover:bg-transparent transition-colors">
+                    <span class="material-symbols-outlined" style="font-size:18px;">chevron_right</span>
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -206,17 +193,17 @@
     (click)="closeCreateModal()">
     <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
 
-    <div class="relative bg-surface-container-lowest rounded-2xl ghost-shadow w-full max-w-lg max-h-[90vh] overflow-y-auto"
+    <div class="relative bg-surface-container-lowest rounded-2xl border border-outline-variant/60 ghost-shadow w-full max-w-lg max-h-[90vh] overflow-y-auto"
         (click)="$event.stopPropagation()">
 
         <!-- Header -->
-        <div class="flex items-center justify-between p-6 border-b border-outline-variant/10">
+        <div class="flex items-center justify-between p-6 border-b border-outline-variant/50">
             <div>
                 <h2 class="font-headline font-bold text-on-surface text-xl">Agregar Mecánico</h2>
                 <p class="text-sm text-on-surface-variant font-body mt-0.5">Registrar un nuevo técnico en el equipo</p>
             </div>
             <button (click)="closeCreateModal()"
-                class="p-2 text-on-surface-variant hover:bg-surface-container rounded-lg transition-colors">
+                class="p-2 text-on-surface-variant hover:bg-surface-container rounded-lg transition-colors border-none">
                 <span class="material-symbols-outlined" style="font-size:20px;">close</span>
             </button>
         </div>
@@ -225,8 +212,7 @@
         <div class="p-6 space-y-5">
             <!-- Avatar color picker -->
             <div class="flex flex-col gap-2">
-                <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Color
-                    del Avatar</label>
+                <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Color del Avatar</label>
                 <div class="flex gap-2 flex-wrap">
                     <button *ngFor="let color of avatarColors" (click)="updateCreateField('avatar_color', color)"
                         class="w-9 h-9 rounded-lg transition-transform hover:scale-110 flex items-center justify-center"
@@ -245,55 +231,54 @@
                 </label>
                 <input type="text" [ngModel]="newMechanic().full_name"
                     (ngModelChange)="updateCreateField('full_name', $event)" placeholder="Ej: Pedro Hernández"
-                    class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body
-                           focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface" />
+                    class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface" />
             </div>
 
             <!-- Phone -->
             <div class="flex flex-col gap-1.5">
-                <label
-                    class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Teléfono</label>
+                <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Teléfono</label>
                 <input type="text" [ngModel]="newMechanic().phone" (ngModelChange)="updateCreateField('phone', $event)"
                     placeholder="Ej: 0412-5551234"
-                    class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body
-                           focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface" />
+                    class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface" />
             </div>
 
             <!-- Specialty + Expertise -->
             <div class="grid grid-cols-2 gap-4">
                 <div class="flex flex-col gap-1.5">
-                    <label
-                        class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Especialidad</label>
+                    <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Especialidad</label>
                     <select [ngModel]="newMechanic().specialty" (ngModelChange)="updateCreateField('specialty', $event)"
-                        class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body
-                               focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface appearance-none">
+                        class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface appearance-none">
                         <option *ngFor="let opt of specialtyOptions" [value]="opt.value">{{ opt.label }}</option>
                     </select>
                 </div>
                 <div class="flex flex-col gap-1.5">
-                    <label
-                        class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Nivel
-                        de Experiencia</label>
+                    <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Nivel de Experiencia</label>
                     <select [ngModel]="newMechanic().expertise" (ngModelChange)="updateCreateField('expertise', $event)"
-                        class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body
-                               focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface appearance-none">
+                        class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface appearance-none">
                         <option *ngFor="let opt of expertiseOptions" [value]="opt.value">{{ opt.label }}</option>
                     </select>
                 </div>
             </div>
+
+            <!-- Workshop selection -->
+            <div class="flex flex-col gap-1.5">
+                <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Sede (Taller) <span class="text-secondary">*</span></label>
+                <select [ngModel]="newMechanic().workshop_id" (ngModelChange)="updateCreateField('workshop_id', $event)"
+                    class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface appearance-none">
+                    <option *ngFor="let w of workshops()" [value]="w.id">{{ w.nombre }}</option>
+                </select>
+            </div>
         </div>
 
         <!-- Footer -->
-        <div class="flex items-center justify-end gap-3 p-6 border-t border-outline-variant/10">
+        <div class="flex items-center justify-end gap-3 p-6 border-t border-outline-variant/50">
             <button (click)="closeCreateModal()"
                 class="px-5 py-2.5 text-sm font-bold font-label text-on-surface-variant hover:bg-surface-container rounded-lg transition-colors">
                 Cancelar
             </button>
             <button (click)="onCreateSubmit()" [disabled]="creating()"
-                class="machined-gradient text-on-primary px-6 py-2.5 rounded-lg text-sm font-bold font-label
-                       ghost-shadow active:scale-[0.98] transition-transform disabled:opacity-50 flex items-center gap-2">
-                <span *ngIf="creating()" class="material-symbols-outlined animate-spin"
-                    style="font-size:16px;">progress_activity</span>
+                class="machined-gradient text-on-primary px-6 py-2.5 rounded-lg text-sm font-bold font-label ghost-shadow active:scale-[0.98] transition-transform disabled:opacity-50 flex items-center gap-2">
+                <span *ngIf="creating()" class="material-symbols-outlined animate-spin" style="font-size:16px;">progress_activity</span>
                 {{ creating() ? 'Registrando...' : 'Registrar Mecánico' }}
             </button>
         </div>
@@ -308,23 +293,23 @@
     (click)="closeEditModal()">
     <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
 
-    <div class="relative bg-surface-container-lowest rounded-2xl ghost-shadow w-full max-w-lg max-h-[90vh] overflow-y-auto"
+    <div class="relative bg-surface-container-lowest rounded-2xl border border-outline-variant/60 ghost-shadow w-full max-w-lg max-h-[90vh] overflow-y-auto"
         (click)="$event.stopPropagation()">
 
         <!-- Header -->
-        <div class="flex items-center justify-between p-6 border-b border-outline-variant/10">
+        <div class="flex items-center justify-between p-6 border-b border-outline-variant/50">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-on-primary font-headline text-sm"
                     [style.background]="editTarget()?.avatar_color">
                     {{ editTarget()?.initials }}
                 </div>
                 <div>
-                    <h2 class="font-headline font-bold text-on-surface text-lg">Editar Mecánico</h2>
+                    <h2 class="font-headline font-bold text-on-surface text-xl">Editar Mecánico</h2>
                     <p class="text-xs text-on-surface-variant font-mono">{{ editTarget()?.employee_code }}</p>
                 </div>
             </div>
             <button (click)="closeEditModal()"
-                class="p-2 text-on-surface-variant hover:bg-surface-container rounded-lg transition-colors">
+                class="p-2 text-on-surface-variant hover:bg-surface-container rounded-lg transition-colors border-none">
                 <span class="material-symbols-outlined" style="font-size:20px;">close</span>
             </button>
         </div>
@@ -333,8 +318,7 @@
         <div class="p-6 space-y-5">
             <!-- Avatar color -->
             <div class="flex flex-col gap-2">
-                <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Color
-                    del Avatar</label>
+                <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Color del Avatar</label>
                 <div class="flex gap-2 flex-wrap">
                     <button *ngFor="let color of avatarColors" (click)="updateEditField('avatar_color', color)"
                         class="w-9 h-9 rounded-lg transition-transform hover:scale-110 flex items-center justify-center"
@@ -348,54 +332,55 @@
 
             <!-- Name -->
             <div class="flex flex-col gap-1.5">
-                <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Nombre
-                    Completo</label>
+                <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Nombre Completo</label>
                 <input type="text" [ngModel]="editForm().full_name"
                     (ngModelChange)="updateEditField('full_name', $event)"
-                    class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body
-                           focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface" />
+                    class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface" />
             </div>
 
             <!-- Phone -->
             <div class="flex flex-col gap-1.5">
-                <label
-                    class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Teléfono</label>
+                <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Teléfono</label>
                 <input type="text" [ngModel]="editForm().phone" (ngModelChange)="updateEditField('phone', $event)"
-                    class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body
-                           focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface" />
+                    class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface" />
             </div>
 
             <!-- Specialty + Expertise -->
             <div class="grid grid-cols-2 gap-4">
                 <div class="flex flex-col gap-1.5">
-                    <label
-                        class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Especialidad</label>
+                    <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Especialidad</label>
                     <select [ngModel]="editForm().specialty" (ngModelChange)="updateEditField('specialty', $event)"
-                        class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body
-                               focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface appearance-none">
+                        class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface appearance-none">
                         <option *ngFor="let opt of specialtyOptions" [value]="opt.value">{{ opt.label }}</option>
                     </select>
                 </div>
                 <div class="flex flex-col gap-1.5">
-                    <label
-                        class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Nivel</label>
+                    <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Nivel</label>
                     <select [ngModel]="editForm().expertise" (ngModelChange)="updateEditField('expertise', $event)"
-                        class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body
-                               focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface appearance-none">
+                        class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface appearance-none">
                         <option *ngFor="let opt of expertiseOptions" [value]="opt.value">{{ opt.label }}</option>
                     </select>
                 </div>
             </div>
+
+            <!-- Workshop selection -->
+            <div class="flex flex-col gap-1.5">
+                <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Sede (Taller) <span class="text-secondary">*</span></label>
+                <select [ngModel]="editForm().workshop_id" (ngModelChange)="updateEditField('workshop_id', $event)"
+                    class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface appearance-none">
+                    <option *ngFor="let w of workshops()" [value]="w.id">{{ w.nombre }}</option>
+                </select>
+            </div>
         </div>
 
         <!-- Footer -->
-        <div class="flex items-center justify-end gap-3 p-6 border-t border-outline-variant/10">
+        <div class="flex items-center justify-end gap-3 p-6 border-t border-outline-variant/50">
             <button (click)="closeEditModal()"
                 class="px-5 py-2.5 text-sm font-bold font-label text-on-surface-variant hover:bg-surface-container rounded-lg transition-colors">
                 Cancelar
             </button>
-            <button (click)="onEditSubmit()" class="machined-gradient text-on-primary px-6 py-2.5 rounded-lg text-sm font-bold font-label
-                       ghost-shadow active:scale-[0.98] transition-transform">
+            <button (click)="onEditSubmit()"
+                class="machined-gradient text-on-primary px-6 py-2.5 rounded-lg text-sm font-bold font-label ghost-shadow active:scale-[0.98] transition-transform">
                 Guardar Cambios
             </button>
         </div>

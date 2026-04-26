@@ -12,7 +12,7 @@
             (input)="onInput($event)" (blur)="onTouched()" [class]="inputClasses" />
 
         <button *ngIf="type === 'password'" type="button" (click)="toggleVisibility()"
-            class="absolute right-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface transition-colors">
+            class="absolute right-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface transition-colors border-none">
             <span class="material-symbols-outlined" style="font-size:18px;">
                 {{ showPassword ? 'visibility_off' : 'visibility' }}
             </span>
