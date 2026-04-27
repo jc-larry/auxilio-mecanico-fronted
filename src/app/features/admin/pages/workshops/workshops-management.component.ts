@@ -93,8 +93,8 @@ export class WorkshopsManagementComponent implements OnInit {
 
   onCreateSubmit(): void {
     const data = this.newWorkshop();
-    if (!data.nombre || !data.direccion) {
-      this.notify.error('Nombre y dirección son obligatorios');
+    if (!data.nombre || !data.direccion || !data.telefono) {
+      this.notify.error('Nombre, dirección y teléfono son obligatorios');
       return;
     }
     this.submitting.set(true);

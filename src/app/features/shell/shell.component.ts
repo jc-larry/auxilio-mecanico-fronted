@@ -33,18 +33,18 @@ export class ShellComponent {
 
     // ── Módulo Administrativo (Configuración Global) ─────────────────────────
     {
-      label: 'Módulo Administrativo',
+      label: 'Administración',
       icon: 'admin_panel_settings',
-      requiredPermission: 'usuarios.asignar_rol', // Solo el Administrador (SuperUser) suele asignar roles
+      requiredRole: 'Administrador',
       children: [
         {
-          label: 'Gestión de Usuarios',
-          icon: 'person_search',
+          label: 'Gestionar Usuarios',
+          icon: 'manage_accounts',
           route: '/dashboard/users',
           requiredPermission: 'usuarios.ver',
         },
         {
-          label: 'Gestión de Roles',
+          label: 'Gestionar Roles',
           icon: 'security',
           route: '/dashboard/roles',
           requiredPermission: 'usuarios.asignar_rol',
@@ -60,24 +60,24 @@ export class ShellComponent {
 
     // ── Módulo Taller (Operación Diaria) ─────────────────────────────────────
     {
-      label: 'Módulo Taller',
+      label: 'Mi Taller',
       icon: 'work',
       requiredPermission: 'solicitudes.ver',
       children: [
         {
-          label: 'Gestión de Solicitudes',
+          label: 'Solicitudes',
           icon: 'build_circle',
           route: '/dashboard/requests',
           requiredPermission: 'solicitudes.ver',
         },
         {
-          label: 'Gestión de Personal',
+          label: 'Personal',
           icon: 'engineering',
           route: '/dashboard/staff',
-          requiredPermission: 'usuarios.ver', // El Propietario ahora tiene este permiso en el seed
+          requiredPermission: 'usuarios.ver',
         },
         {
-          label: 'Gestión de Inventario',
+          label: 'Inventario',
           icon: 'inventory_2',
           route: '/dashboard/inventory',
           requiredPermission: 'inventario.ver',
@@ -95,22 +95,45 @@ export class ShellComponent {
   navItems = computed(() => {
     const permissions = this.user()?.permissions || [];
     const roles = this.user()?.roles || [];
+    const tallerId = this.user()?.taller_id;
+    const isPropietario = roles.includes('Propietario');
 
     const filterItems = (items: NavItem[]): NavItem[] => {
       return items.reduce((acc: NavItem[], item) => {
-        const hasPermission = !item.requiredPermission || permissions.includes(item.requiredPermission);
-        const hasRole = !item.requiredRole || 
-                         item.requiredRole.split(',').some(r => roles.includes(r.trim()));
+        let currentItem = { ...item };
+        
+        // Special logic for "Mi Taller"
+        if (currentItem.label === 'Mi Taller') {
+          if (!tallerId) {
+            if (isPropietario) {
+              // Propietario without a workshop can register one
+              currentItem.children = [
+                {
+                  label: 'Registrar Taller',
+                  icon: 'add_business',
+                  route: '/dashboard/workshops',
+                  requiredPermission: 'talleres.crear'
+                }
+              ];
+            } else {
+              // Any other role (like Mecánico) without a workshop doesn't see "Mi Taller"
+              return acc;
+            }
+          }
+        }
+
+        const hasPermission = !currentItem.requiredPermission || permissions.includes(currentItem.requiredPermission);
+        const hasRole = !currentItem.requiredRole || 
+                         currentItem.requiredRole.split(',').some(r => roles.includes(r.trim()));
 
         if (hasPermission && hasRole) {
-          if (item.children) {
-            const filteredChildren = filterItems(item.children);
-            // Hide parent if it has children defined but none are accessible
+          if (currentItem.children) {
+            const filteredChildren = filterItems(currentItem.children);
             if (filteredChildren.length > 0) {
-              acc.push({ ...item, children: filteredChildren });
+              acc.push({ ...currentItem, children: filteredChildren });
             }
           } else {
-            acc.push(item);
+            acc.push(currentItem);
           }
         }
         return acc;

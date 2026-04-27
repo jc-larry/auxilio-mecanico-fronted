@@ -105,20 +105,20 @@
         </div>
         <div class="p-6 space-y-4">
             <div class="flex flex-col gap-1.5">
-                <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Nombre</label>
+                <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Nombre <span class="text-red-500">*</span></label>
                 <input [ngModel]="newWorkshop().nombre" (ngModelChange)="updateCreateField('nombre', $event)"
                     type="text"
                     class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface">
             </div>
             <div class="flex flex-col gap-1.5">
-                <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Dirección</label>
+                <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Dirección <span class="text-red-500">*</span></label>
                 <input [ngModel]="newWorkshop().direccion" (ngModelChange)="updateCreateField('direccion', $event)"
                     type="text"
                     class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface">
             </div>
             <div class="grid grid-cols-2 gap-4">
                 <div class="flex flex-col gap-1.5">
-                    <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Teléfono</label>
+                    <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Teléfono <span class="text-red-500">*</span></label>
                     <input [ngModel]="newWorkshop().telefono" (ngModelChange)="updateCreateField('telefono', $event)"
                         type="text"
                         class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface">
@@ -176,20 +176,20 @@
         </div>
         <div class="p-6 space-y-4">
             <div class="flex flex-col gap-1.5">
-                <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Nombre</label>
+                <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Nombre <span class="text-red-500">*</span></label>
                 <input [ngModel]="editForm().nombre" (ngModelChange)="updateEditField('nombre', $event)"
                     type="text"
                     class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface">
             </div>
             <div class="flex flex-col gap-1.5">
-                <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Dirección</label>
+                <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Dirección <span class="text-red-500">*</span></label>
                 <input [ngModel]="editForm().direccion" (ngModelChange)="updateEditField('direccion', $event)"
                     type="text"
                     class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface">
             </div>
             <div class="grid grid-cols-2 gap-4">
                 <div class="flex flex-col gap-1.5">
-                    <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Teléfono</label>
+                    <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Teléfono <span class="text-red-500">*</span></label>
                     <input [ngModel]="editForm().telefono" (ngModelChange)="updateEditField('telefono', $event)"
                         type="text"
                         class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface">

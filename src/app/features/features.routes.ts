@@ -17,7 +17,7 @@ export const FEATURES_ROUTES: Routes = [
       {
         path: 'requests',
         canActivate: [permissionGuard],
-        data: { permissions: ['solicitudes.ver'] },
+        data: { permissions: ['solicitudes.ver', 'solicitudes.asignar_mecanico', 'solicitudes.cambiar_estado', 'solicitudes.crear'] },
         loadComponent: () =>
           import('./workshop/pages/requests/service-requests.component').then(m => m.ServiceRequestsComponent),
       },
@@ -62,6 +62,13 @@ export const FEATURES_ROUTES: Routes = [
         data: { permissions: ['talleres.ver'] },
         loadComponent: () =>
           import('./admin/pages/workshops/workshops-management.component').then(m => m.WorkshopsManagementComponent),
+      },
+      {
+        path: 'audit-log',
+        canActivate: [permissionGuard],
+        data: { permissions: ['bitacora.ver'] },
+        loadComponent: () =>
+          import('./admin/pages/audit-log/audit-log.component').then(m => m.AuditLogComponent),
       },
     ],
   },

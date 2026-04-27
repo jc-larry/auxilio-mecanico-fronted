@@ -1,0 +1,110 @@
+<div class="p-8 max-w-7xl mx-auto font-body">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <div>
+            <h1 class="text-3xl font-headline font-bold text-on-surface tracking-tight mb-1">Visualizar Bitácora</h1>
+        </div>
+        <div class="flex items-center gap-3">
+            <button (click)="loadLogs()"
+                class="h-10 w-10 flex items-center justify-center rounded-lg border-none text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors">
+                <span class="material-symbols-outlined" style="font-size:20px;">refresh</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Table Section -->
+    <div class="bg-surface rounded-2xl border border-outline-variant/60 shadow-sm overflow-hidden mb-6">
+        <div class="overflow-x-auto min-h-[400px]">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-surface-container-low/50">
+                        <th class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/60">Fecha</th>
+                        <th class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/60">Usuario</th>
+                        <th class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/60">Acción</th>
+                        <th class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/60">Entidad</th>
+                        <th class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/60">Ref.</th>
+                        <th class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/60">Detalles</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngIf="loading()">
+                        <td colspan="6" class="py-12 text-center text-on-surface-variant">
+                            <span class="material-symbols-outlined animate-spin" style="font-size: 32px;">progress_activity</span>
+                            <p class="mt-2 text-sm">Cargando registros...</p>
+                        </td>
+                    </tr>
+                    <tr *ngIf="!loading() && logs().length === 0">
+                        <td colspan="6" class="py-12 text-center text-on-surface-variant">
+                            <span class="material-symbols-outlined mb-2" style="font-size: 32px; opacity: 0.5;">history</span>
+                            <p class="text-sm">No se encontraron registros en la bitácora.</p>
+                        </td>
+                    </tr>
+                    <tr *ngFor="let log of logs()"
+                        class="group hover:bg-surface-container-lowest/50 transition-colors border-b border-outline-variant/50 last:border-0">
+                        <td class="py-4 px-5">
+                            <div>
+                                <p class="text-sm text-on-surface font-medium whitespace-nowrap">{{ log.fecha_hora | date:'dd/MM/yyyy' }}</p>
+                                <p class="text-xs text-on-surface-variant whitespace-nowrap">{{ log.fecha_hora | date:'HH:mm:ss' }}</p>
+                            </div>
+                        </td>
+                        <td class="py-4 px-5">
+                            <div class="flex items-center gap-3">
+                                <div class="w-9 h-9 rounded-full machined-gradient flex items-center justify-center text-on-primary font-headline font-bold text-xs shadow-sm shrink-0">
+                                    {{ log.usuario ? log.usuario.full_name.charAt(0).toUpperCase() : 'S' }}
+                                </div>
+                                <div>
+                                    <p class="font-headline font-bold text-sm text-on-surface">{{ log.usuario?.full_name || 'Sistema' }}</p>
+                                    <p class="text-xs text-on-surface-variant">{{ log.usuario ? '@' + log.usuario.username : '' }}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="py-4 px-5">
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold font-label tracking-wide uppercase"
+                                [ngClass]="getActionClasses(log.accion)">
+                                {{ getActionLabel(log.accion) }}
+                            </span>
+                        </td>
+                        <td class="py-4 px-5">
+                            <span class="text-sm text-on-surface">{{ getEntityLabel(log.entidad) }}</span>
+                        </td>
+                        <td class="py-4 px-5">
+                            <span *ngIf="log.entidad_id" class="text-xs font-mono text-on-surface-variant font-bold">#{{ log.entidad_id }}</span>
+                            <span *ngIf="!log.entidad_id" class="text-xs text-outline italic">—</span>
+                        </td>
+                        <td class="py-4 px-5">
+                            <span *ngIf="log.detalles" class="text-xs text-on-surface-variant">
+                                {{ formatDetails(log.detalles) }}
+                            </span>
+                            <span *ngIf="!log.detalles" class="text-xs text-outline italic">Sin detalles</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="p-4 border-t border-outline-variant/50 flex items-center justify-between bg-surface-container-lowest">
+            <p class="text-xs text-on-surface-variant font-label">Página {{ currentPage() }} de {{ totalPages() }} · {{ total() }} registros</p>
+            <div class="flex gap-1">
+                <button [disabled]="currentPage() === 1" (click)="onPageChange(currentPage() - 1)"
+                    class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant/70 text-on-surface hover:bg-surface-container disabled:opacity-50 disabled:hover:bg-transparent transition-colors">
+                    <span class="material-symbols-outlined" style="font-size:18px;">chevron_left</span>
+                </button>
+                <ng-container *ngFor="let p of pages()">
+                    <button *ngIf="p === 1 || p === totalPages() || (p >= currentPage() - 1 && p <= currentPage() + 1)"
+                        (click)="onPageChange(p)"
+                        class="w-8 h-8 flex items-center justify-center rounded font-label text-sm transition-colors"
+                        [ngClass]="p === currentPage() ? 'machined-gradient text-on-primary font-bold border-transparent' : 'border border-outline-variant/70 text-on-surface hover:bg-surface-container'">
+                        {{ p }}
+                    </button>
+                    <span *ngIf="p === currentPage() - 2 && p > 1 || p === currentPage() + 2 && p < totalPages()"
+                        class="w-8 h-8 flex items-center justify-center text-on-surface-variant">...</span>
+                </ng-container>
+                <button [disabled]="currentPage() === totalPages()" (click)="onPageChange(currentPage() + 1)"
+                    class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant/70 text-on-surface hover:bg-surface-container disabled:opacity-50 disabled:hover:bg-transparent transition-colors">
+                    <span class="material-symbols-outlined" style="font-size:18px;">chevron_right</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
