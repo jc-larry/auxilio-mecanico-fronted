@@ -1,16 +1,6 @@
 // ── Service Request Models ──
 
-export type ServiceType =
-  | 'towing'
-  | 'tire_change'
-  | 'battery'
-  | 'lockout'
-  | 'fuel'
-  | 'diagnostics'
-  | 'brakes'
-  | 'oil_change'
-  | 'transmission'
-  | 'general';
+// ServiceType ya no es un string union, viene de base de datos
 
 export type Status = 'PENDIENTE' | 'EN_PROGRESO' | 'CRITICO' | 'COMPLETADO' | 'RECHAZADO';
 
@@ -21,7 +11,7 @@ export interface ServiceRequest {
   code: string;
   client_name: string;
   vehicle_info: string;
-  service_type: ServiceType;
+  service_type: string;
   service_type_label: string;
   service_icon: string;
   description: string;
@@ -39,7 +29,7 @@ export interface ServiceRequest {
 export interface ServiceRequestCreate {
   cliente_id: number;
   vehiculo_id: number;  
-  service_type: ServiceType;
+  tipo_servicio_id: number;
   description: string;
   location: string;
   priority: Priority;
@@ -70,18 +60,7 @@ export interface ServiceRequestStats {
 
 // ── Mapeos de UI ──
 
-export const SERVICE_TYPE_OPTIONS: { value: ServiceType; label: string }[] = [
-  { value: 'towing', label: 'Grúa / Remolque' },
-  { value: 'tire_change', label: 'Cambio de Neumático' },
-  { value: 'battery', label: 'Servicio de Batería' },
-  { value: 'lockout', label: 'Apertura de Vehículo' },
-  { value: 'fuel', label: 'Suministro de Combustible' },
-  { value: 'diagnostics', label: 'Diagnóstico' },
-  { value: 'brakes', label: 'Reparación de Frenos' },
-  { value: 'oil_change', label: 'Cambio de Aceite' },
-  { value: 'transmission', label: 'Transmisión' },
-  { value: 'general', label: 'Servicio General' },
-];
+// SERVICE_TYPE_OPTIONS ha sido eliminado, ahora se cargan dinámicamente.
 
 export const STATUS_OPTIONS: { value: Status; label: string }[] = [
   { value: 'PENDIENTE', label: 'Pendiente' },

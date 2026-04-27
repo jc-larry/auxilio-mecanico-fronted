@@ -33,7 +33,7 @@ export const FEATURES_ROUTES: Routes = [
         canActivate: [permissionGuard],
         data: { permissions: ['inventario.ver'] },
         loadComponent: () =>
-          import('./workshop/pages/inventory/inventory-analytics.component').then(m => m.InventoryAnalyticsComponent),
+          import('./workshop/pages/inventory/inventory.component').then(m => m.InventoryAnalyticsComponent),
       },
       {
         path: 'analytics',
@@ -41,6 +41,13 @@ export const FEATURES_ROUTES: Routes = [
         data: { permissions: ['talleres.analiticas'] },
         loadComponent: () =>
           import('./workshop/pages/analytics/analytics.component').then(m => m.AnalyticsComponent),
+      },
+      {
+        path: 'services',
+        canActivate: [permissionGuard],
+        data: { permissions: ['servicios.ver'] },
+        loadComponent: () =>
+          import('./workshop/pages/services/service-types.component').then(m => m.ServiceTypesComponent),
       },
       {
         path: 'users',

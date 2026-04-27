@@ -3,7 +3,6 @@ import { Component, computed, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   PRIORITY_OPTIONS,
-  SERVICE_TYPE_OPTIONS,
   ServiceRequest,
   ServiceRequestCreate,
   ServiceRequestStats,
@@ -18,6 +17,8 @@ import { Mechanic } from '../../../../core/models/mechanic.models';
 import { ClientService } from '../../../../core/services/client.service';
 import { Client } from '../../../../core/models/client.models';
 import { Vehicle } from '../../../../core/models/vehicle.models';
+import { ServiceType } from '../../../../core/models/service-type.models';
+import { ServiceTypeService } from '../../../../core/services/service-type.service';
 
 @Component({
   selector: 'app-service-requests',
@@ -44,6 +45,7 @@ export class ServiceRequestsComponent implements OnInit {
   readonly mechanics = signal<Mechanic[]>([]);
   readonly clients = signal<Client[]>([]);
   readonly vehicles = signal<Vehicle[]>([]);
+  readonly serviceTypeOptions = signal<ServiceType[]>([]);
 
   // ── Modal state ──
   readonly showCreateModal = signal(false);
@@ -56,14 +58,13 @@ export class ServiceRequestsComponent implements OnInit {
   readonly newRequest = signal<ServiceRequestCreate>({
     cliente_id: 0,
     vehiculo_id: 0,
-    service_type: 'general',
+    tipo_servicio_id: 0,
     description: '',
     location: '',
     priority: 'media',
   });
 
   // ── Options for selects ──
-  readonly serviceTypeOptions = SERVICE_TYPE_OPTIONS;
   readonly statusOptions = STATUS_OPTIONS;
   readonly priorityOptions = PRIORITY_OPTIONS;
 
@@ -83,7 +84,8 @@ export class ServiceRequestsComponent implements OnInit {
     private srService: ServiceRequestService,
     private mechanicService: MechanicService,
     private clientService: ClientService,
-    private notify: NotificationService
+    private notify: NotificationService,
+    private serviceTypeService: ServiceTypeService
   ) {}
 
   ngOnInit(): void {
@@ -91,6 +93,7 @@ export class ServiceRequestsComponent implements OnInit {
     this.loadStats();
     this.loadMechanics();
     this.loadClients();
+    this.loadServiceTypes();
   }
 
   // ── Data loading ──
@@ -144,6 +147,15 @@ export class ServiceRequestsComponent implements OnInit {
     });
   }
 
+  loadServiceTypes(): void {
+    this.serviceTypeService.list(1, 100).subscribe({
+      next: (res) => {
+        this.serviceTypeOptions.set(res.items);
+      },
+      error: () => this.notify.error('Error al cargar tipos de servicio'),
+    });
+  }
+
   // ── Pagination ──
 
   onPageChange(page: number): void {
@@ -166,7 +178,7 @@ export class ServiceRequestsComponent implements OnInit {
     this.newRequest.set({
       cliente_id: 0,
       vehiculo_id: 0,
-      service_type: 'general',
+      tipo_servicio_id: 0,
       description: '',
       location: '',
       priority: 'media',
@@ -181,7 +193,7 @@ export class ServiceRequestsComponent implements OnInit {
 
   onCreateSubmit(): void {
     const data = this.newRequest();
-    if (!data.cliente_id || !data.vehiculo_id || !data.location) {
+    if (!data.cliente_id || !data.vehiculo_id || !data.location || !data.tipo_servicio_id) {
       this.notify.error('Complete los campos obligatorios');
       return;
     }
@@ -203,6 +215,7 @@ export class ServiceRequestsComponent implements OnInit {
   }
 
   updateFormField(field: keyof ServiceRequestCreate, value: any): void {
+    if (field === 'tipo_servicio_id') value = parseInt(value, 10);
     this.newRequest.update(current => ({ ...current, [field]: value }));
   }
 

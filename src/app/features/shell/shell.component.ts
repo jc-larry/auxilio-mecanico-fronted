@@ -47,13 +47,19 @@ export class ShellComponent {
           label: 'Gestionar Roles',
           icon: 'security',
           route: '/dashboard/roles',
-          requiredPermission: 'usuarios.asignar_rol',
+          requiredPermission: 'roles.ver',
         },
         {
           label: 'Visualizar Bitácora',
           icon: 'history',
           route: '/dashboard/audit-log',
           requiredPermission: 'bitacora.ver',
+        },
+        {
+          label: 'Ofertas de Servicio',
+          icon: 'handyman',
+          route: '/dashboard/services',
+          requiredPermission: 'servicios.ver',
         },
       ],
     },
@@ -62,7 +68,7 @@ export class ShellComponent {
     {
       label: 'Mi Taller',
       icon: 'work',
-      requiredPermission: 'solicitudes.ver',
+      requiredPermission: 'solicitudes.ver, usuarios.ver, inventario.ver, talleres.analiticas',
       children: [
         {
           label: 'Solicitudes',
@@ -122,7 +128,8 @@ export class ShellComponent {
           }
         }
 
-        const hasPermission = !currentItem.requiredPermission || permissions.includes(currentItem.requiredPermission);
+        const hasPermission = !currentItem.requiredPermission || 
+                              currentItem.requiredPermission.split(',').some(p => permissions.includes(p.trim()));
         const hasRole = !currentItem.requiredRole || 
                          currentItem.requiredRole.split(',').some(r => roles.includes(r.trim()));
 
