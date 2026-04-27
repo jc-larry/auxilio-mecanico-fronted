@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, computed, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { AnalyticsSummary } from '../../../../core/models/analytics.models';
@@ -7,6 +7,7 @@ import { InventoryItem } from '../../../../core/models/inventory.models';
 import { Mechanic } from '../../../../core/models/mechanic.models';
 import { ServiceRequest, ServiceRequestUpdate, Status, STATUS_OPTIONS } from '../../../../core/models/service-request.models';
 import { AnalyticsService } from '../../../../core/services/analytics.service';
+import { AuthService } from '../../../../core/services/auth.service';
 import { InventoryService } from '../../../../core/services/inventory.service';
 import { MechanicService } from '../../../../core/services/mechanic.service';
 import { NotificationService } from '../../../../core/services/notification.service';
@@ -35,7 +36,10 @@ export class MainDashboardComponent implements OnInit {
   readonly assignTarget = signal<ServiceRequest | null>(null);
   readonly assignMechanicName = signal('');
 
+  user = computed(() => this.authService.currentUser());
+
   constructor(
+    private authService: AuthService,
     private analyticsService: AnalyticsService,
     private srService: ServiceRequestService,
     private mecService: MechanicService,

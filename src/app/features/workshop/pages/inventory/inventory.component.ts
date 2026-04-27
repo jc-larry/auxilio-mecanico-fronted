@@ -12,10 +12,10 @@ import { InventoryService } from '../../../../core/services/inventory.service';
 import { NotificationService } from '../../../../core/services/notification.service';
 
 @Component({
-  selector: 'app-inventory-analytics',
+  selector: 'app-inventory',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './inventory-analytics.component.html',
+  templateUrl: './inventory.component.html',
 })
 export class InventoryAnalyticsComponent implements OnInit {
   // ── State ──
@@ -169,6 +169,7 @@ export class InventoryAnalyticsComponent implements OnInit {
     const target = this.editTarget();
     if (!target) return;
 
+    console.log('Updating item with ID:', target.id, this.editForm());
     this.invService.update(target.id, this.editForm()).subscribe({
       next: () => {
         this.notify.success(`${target.name} actualizado`);

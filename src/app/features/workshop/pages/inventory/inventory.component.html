@@ -239,7 +239,7 @@
                         class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Sistema</label>
                     <select [ngModel]="newItem().system_category"
                         (ngModelChange)="updateCreateField('system_category', $event)"
-                        class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface appearance-none">
+                        class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface">
                         <option *ngFor="let opt of categoryOptions" [value]="opt.value">{{ opt.label }}</option>
                     </select>
                 </div>
@@ -321,7 +321,7 @@
                     class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Sistema</label>
                 <select [ngModel]="editForm().system_category"
                     (ngModelChange)="updateEditField('system_category', $event)"
-                    class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface appearance-none">
+                    class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface">
                     <option *ngFor="let opt of categoryOptions" [value]="opt.value">{{ opt.label }}</option>
                 </select>
             </div>

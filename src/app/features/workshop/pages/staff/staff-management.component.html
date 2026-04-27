@@ -247,14 +247,14 @@
                 <div class="flex flex-col gap-1.5">
                     <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Especialidad</label>
                     <select [ngModel]="newMechanic().specialty" (ngModelChange)="updateCreateField('specialty', $event)"
-                        class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface appearance-none">
+                        class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface">
                         <option *ngFor="let opt of specialtyOptions" [value]="opt.value">{{ opt.label }}</option>
                     </select>
                 </div>
                 <div class="flex flex-col gap-1.5">
                     <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Nivel de Experiencia</label>
                     <select [ngModel]="newMechanic().expertise" (ngModelChange)="updateCreateField('expertise', $event)"
-                        class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface appearance-none">
+                        class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface">
                         <option *ngFor="let opt of expertiseOptions" [value]="opt.value">{{ opt.label }}</option>
                     </select>
                 </div>
@@ -264,7 +264,7 @@
             <div class="flex flex-col gap-1.5">
                 <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Sede (Taller) <span class="text-secondary">*</span></label>
                 <select [ngModel]="newMechanic().workshop_id" (ngModelChange)="updateCreateField('workshop_id', $event)"
-                    class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface appearance-none">
+                    class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface">
                     <option *ngFor="let w of workshops()" [value]="w.id">{{ w.nombre }}</option>
                 </select>
             </div>
@@ -350,14 +350,14 @@
                 <div class="flex flex-col gap-1.5">
                     <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Especialidad</label>
                     <select [ngModel]="editForm().specialty" (ngModelChange)="updateEditField('specialty', $event)"
-                        class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface appearance-none">
+                        class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface">
                         <option *ngFor="let opt of specialtyOptions" [value]="opt.value">{{ opt.label }}</option>
                     </select>
                 </div>
                 <div class="flex flex-col gap-1.5">
                     <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Nivel</label>
                     <select [ngModel]="editForm().expertise" (ngModelChange)="updateEditField('expertise', $event)"
-                        class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface appearance-none">
+                        class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface">
                         <option *ngFor="let opt of expertiseOptions" [value]="opt.value">{{ opt.label }}</option>
                     </select>
                 </div>
@@ -367,7 +367,7 @@
             <div class="flex flex-col gap-1.5">
                 <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Sede (Taller) <span class="text-secondary">*</span></label>
                 <select [ngModel]="editForm().workshop_id" (ngModelChange)="updateEditField('workshop_id', $event)"
-                    class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface appearance-none">
+                    class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface">
                     <option *ngFor="let w of workshops()" [value]="w.id">{{ w.nombre }}</option>
                 </select>
             </div>

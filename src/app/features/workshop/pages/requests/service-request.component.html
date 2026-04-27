@@ -259,7 +259,7 @@
                 <select [ngModel]="newRequest().cliente_id"
                     (ngModelChange)="onClientChange($event)"
                     class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body
-                           focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface appearance-none">
+                           focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface">
                     <option [value]="0" disabled>Seleccione un cliente...</option>
                     <option *ngFor="let c of clients()" [value]="c.id">{{ c.nombre }} ({{ c.email }})</option>
                 </select>
@@ -274,7 +274,7 @@
                     (ngModelChange)="onVehicleChange($event)"
                     [disabled]="vehicles().length === 0"
                     class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body
-                           focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface appearance-none disabled:opacity-50">
+                           focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface disabled:opacity-50">
                     <option [value]="0" disabled>{{ vehicles().length === 0 ? 'No hay vehículos disponibles' : 'Seleccione un vehículo...' }}</option>
                     <option *ngFor="let v of vehicles()" [value]="v.id">{{ v.marca }} {{ v.modelo }} ({{ v.placa }})</option>
                 </select>
@@ -298,11 +298,12 @@
                     <label
                         class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Tipo
                         de Servicio</label>
-                    <select [ngModel]="newRequest().service_type"
-                        (ngModelChange)="updateFormField('service_type', $event)"
+                    <select [ngModel]="newRequest().tipo_servicio_id"
+                        (ngModelChange)="updateFormField('tipo_servicio_id', $event)"
                         class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body
-                               focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface appearance-none">
-                        <option *ngFor="let opt of serviceTypeOptions" [value]="opt.value">{{ opt.label }}</option>
+                               focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface">
+                        <option [value]="0" disabled>Seleccione un tipo de servicio...</option>
+                        <option *ngFor="let opt of serviceTypeOptions()" [value]="opt.id">{{ opt.nombre }}</option>
                     </select>
                 </div>
                 <div class="flex flex-col gap-1.5">
@@ -310,7 +311,7 @@
                         class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Prioridad</label>
                     <select [ngModel]="newRequest().priority" (ngModelChange)="updateFormField('priority', $event)"
                         class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body
-                               focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface appearance-none">
+                               focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface">
                         <option *ngFor="let opt of priorityOptions" [value]="opt.value">{{ opt.label }}</option>
                     </select>
                 </div>

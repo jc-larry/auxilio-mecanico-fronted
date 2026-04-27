@@ -126,7 +126,7 @@
                 <div class="flex flex-col gap-1.5">
                     <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Estado</label>
                     <select [ngModel]="newWorkshop().estado" (ngModelChange)="updateCreateField('estado', $event)"
-                        class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface appearance-none">
+                        class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface">
                         <option [ngValue]="true">Operativo</option>
                         <option [ngValue]="false">Inactivo</option>
                     </select>
@@ -197,7 +197,7 @@
                 <div class="flex flex-col gap-1.5">
                     <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Estado</label>
                     <select [ngModel]="editForm().estado" (ngModelChange)="updateEditField('estado', $event)"
-                        class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface appearance-none">
+                        class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface">
                         <option [ngValue]="true">Operativo</option>
                         <option [ngValue]="false">Inactivo</option>
                     </select>
