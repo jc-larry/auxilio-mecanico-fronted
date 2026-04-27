@@ -56,7 +56,6 @@
                                 </div>
                                 <div>
                                     <p class="font-headline font-bold text-sm text-on-surface">{{ u.full_name }}</p>
-                                    <p class="text-xs text-on-surface-variant">{{"@" + u.username }}</p>
                                 </div>
                             </div>
                         </td>
@@ -161,13 +160,7 @@
                     class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface"
                     placeholder="ana@ejemplo.com">
             </div>
-            <div class="flex flex-col gap-1.5">
-                <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Username</label>
-                <input [ngModel]="newUser().username" (ngModelChange)="updateCreateField('username', $event)"
-                    type="text"
-                    class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface"
-                    placeholder="anaperez">
-            </div>
+
             <div class="grid grid-cols-2 gap-4">
                 <div class="flex flex-col gap-1.5">
                     <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Contraseña</label>
@@ -266,7 +259,7 @@
 <!-- Password Modal -->
 <div *ngIf="showPasswordModal()" class="fixed inset-0 z-[100] flex items-center justify-center p-4"
     (click)="closePasswordModal()">
-    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+    <div class="absolute inset-0 bg-black/40"></div>
     <div class="relative bg-surface-container-lowest rounded-2xl border border-outline-variant/60 ghost-shadow w-full max-w-md overflow-hidden"
         (click)="$event.stopPropagation()">
         <div class="flex items-center justify-between p-6 border-b border-outline-variant/50">

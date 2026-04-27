@@ -12,21 +12,15 @@ export type Specialty =
   | 'frenos'
   | 'carroceria';
 
-export type MechanicExpertise = 'SENIOR' | 'INTERMEDIO' | 'JUNIOR';
 
 export interface Mechanic {
   id: number;
-  employee_code: string;
   full_name: string;
   initials: string;
-  phone: string;
   specialty: Specialty;
   specialty_label: string;
   specialty_icon: string;
-  expertise: MechanicExpertise;
-  expertise_label: string;
   is_available: boolean;
-  avatar_color: string;
   created_at: string;
   updated_at: string;
   user_id: number;
@@ -35,20 +29,14 @@ export interface Mechanic {
 
 export interface MechanicCreate {
   full_name: string;
-  phone: string;
   specialty: Specialty;
-  expertise: MechanicExpertise;
-  avatar_color: string;
   workshop_id: number | null;
 }
 
 export interface MechanicUpdate {
   full_name?: string;
-  phone?: string;
   specialty?: Specialty;
-  expertise?: MechanicExpertise;
   is_available?: boolean;
-  avatar_color?: string;
   workshop_id?: number | null;
 }
 
@@ -83,13 +71,4 @@ export const SPECIALTY_OPTIONS: { value: Specialty; label: string }[] = [
   { value: 'carroceria', label: 'Carrocería' },
 ];
 
-export const EXPERTISE_OPTIONS: { value: MechanicExpertise; label: string }[] = [
-  { value: 'SENIOR', label: 'Senior' },
-  { value: 'INTERMEDIO', label: 'Intermedio' },
-  { value: 'JUNIOR', label: 'Junior' },
-];
 
-export const AVATAR_COLORS: string[] = [
-  '#091426', '#9d4300', '#3c475a', '#1e293b', '#4a2c6e',
-  '#1a4731', '#6b2130', '#2c3e50', '#7c4a03', '#0c4a6e',
-];

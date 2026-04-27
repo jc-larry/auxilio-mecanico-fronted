@@ -35,7 +35,7 @@ export class UsersManagementComponent implements OnInit {
   // ── Form model ──
   readonly newUser = signal<RegisterRequest>({
     full_name: '',
-    username: '',
+
     email: '',
     password: '',
     confirm_password: '',
@@ -101,7 +101,7 @@ export class UsersManagementComponent implements OnInit {
   openCreateModal(): void {
     this.newUser.set({
       full_name: '',
-      username: '',
+
       email: '',
       password: '',
       confirm_password: '',
@@ -115,7 +115,7 @@ export class UsersManagementComponent implements OnInit {
 
   onCreateSubmit(): void {
     const data = this.newUser();
-    if (!data.full_name || !data.email || !data.username || !data.password) {
+    if (!data.full_name || !data.email || !data.password) {
       this.notify.error('Todos los campos son obligatorios');
       return;
     }

@@ -5,7 +5,7 @@ export interface LoginRequest {
 
 export interface RegisterRequest {
   email: string;
-  username: string;
+
   full_name: string;
   password: string;
   confirm_password: string;
@@ -21,7 +21,7 @@ export interface TokenResponse {
 export interface User {
   id: number;
   email: string;
-  username: string;
+
   full_name: string;
   is_active: boolean;
   is_verified: boolean;
@@ -29,6 +29,7 @@ export interface User {
   last_login: string | null;
   roles?: string[];
   permissions?: string[];
+  taller_id?: number;
 }
 
 export interface ApiError {

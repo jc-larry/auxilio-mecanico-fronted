@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 export interface AuditLogUser {
   id: number;
   full_name: string;
-  username: string;
+
   email: string;
 }
 

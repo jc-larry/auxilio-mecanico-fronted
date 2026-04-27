@@ -86,7 +86,7 @@ export class AuditLogComponent implements OnInit {
   formatDetails(detalles: any): string {
     if (!detalles) return '';
     const parts: string[] = [];
-    if (detalles.username) parts.push(detalles.username);
+    if (detalles.email) parts.push(detalles.email);
     if (detalles.codigo) parts.push(detalles.codigo);
     if (detalles.nuevo_estado) parts.push(detalles.nuevo_estado);
     if (detalles.disponible !== undefined) parts.push(detalles.disponible ? 'Disponible' : 'No disponible');

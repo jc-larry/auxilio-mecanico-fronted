@@ -75,7 +75,6 @@
                     <tr class="bg-surface-container-low/50">
                         <th class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/60">Datos del Mecánico</th>
                         <th class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/60">Especialidad</th>
-                        <th class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/60">Nivel</th>
                         <th class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/60 text-center">Estado</th>
                         <th class="py-3 px-5 text-xs font-label font-bold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/60 text-right">Acciones</th>
                     </tr>
@@ -88,8 +87,7 @@
                         <td class="py-4 px-5">
                             <div class="flex items-center gap-3">
                                 <div class="relative shrink-0">
-                                    <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-on-primary font-headline text-sm shadow-sm"
-                                        [style.background]="member.avatar_color">
+                                    <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-on-primary font-headline text-sm shadow-sm bg-surface-container-highest">
                                         {{ member.initials }}
                                     </div>
                                     <span class="absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white flex items-center justify-center"
@@ -100,7 +98,6 @@
                                 </div>
                                 <div>
                                     <p class="font-headline font-bold text-sm text-on-surface leading-tight">{{ member.full_name }}</p>
-                                    <p class="text-xs text-on-surface-variant font-body">ID: {{ member.employee_code }}</p>
                                 </div>
                             </div>
                         </td>
@@ -114,16 +111,6 @@
                             </div>
                         </td>
 
-                        <!-- Expertise badge -->
-                        <td class="py-4 px-5">
-                            <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded border tracking-wide" [ngClass]="{
-                                'bg-primary/10 text-primary border-primary/20': member.expertise === 'SENIOR',
-                                'bg-surface-container-highest text-on-surface border-outline-variant/70': member.expertise === 'INTERMEDIO',
-                                'bg-secondary/10 text-secondary border-secondary/20': member.expertise === 'JUNIOR'
-                            }">
-                                {{ member.expertise_label }}
-                            </span>
-                        </td>
 
                         <!-- Online status -->
                         <td class="py-4 px-5 text-center">
@@ -210,20 +197,6 @@
 
         <!-- Form -->
         <div class="p-6 space-y-5">
-            <!-- Avatar color picker -->
-            <div class="flex flex-col gap-2">
-                <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Color del Avatar</label>
-                <div class="flex gap-2 flex-wrap">
-                    <button *ngFor="let color of avatarColors" (click)="updateCreateField('avatar_color', color)"
-                        class="w-9 h-9 rounded-lg transition-transform hover:scale-110 flex items-center justify-center"
-                        [style.background]="color"
-                        [class]="newMechanic().avatar_color === color ? 'ring-2 ring-primary ring-offset-2 scale-110' : ''">
-                        <span *ngIf="newMechanic().avatar_color === color" class="material-symbols-outlined text-white"
-                            style="font-size:14px;">check</span>
-                    </button>
-                </div>
-            </div>
-
             <!-- Name -->
             <div class="flex flex-col gap-1.5">
                 <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">
@@ -234,28 +207,12 @@
                     class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface" />
             </div>
 
-            <!-- Phone -->
-            <div class="flex flex-col gap-1.5">
-                <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Teléfono</label>
-                <input type="text" [ngModel]="newMechanic().phone" (ngModelChange)="updateCreateField('phone', $event)"
-                    placeholder="Ej: 0412-5551234"
-                    class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface" />
-            </div>
-
-            <!-- Specialty + Expertise -->
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 gap-4">
                 <div class="flex flex-col gap-1.5">
                     <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Especialidad</label>
                     <select [ngModel]="newMechanic().specialty" (ngModelChange)="updateCreateField('specialty', $event)"
                         class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface">
                         <option *ngFor="let opt of specialtyOptions" [value]="opt.value">{{ opt.label }}</option>
-                    </select>
-                </div>
-                <div class="flex flex-col gap-1.5">
-                    <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Nivel de Experiencia</label>
-                    <select [ngModel]="newMechanic().expertise" (ngModelChange)="updateCreateField('expertise', $event)"
-                        class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface">
-                        <option *ngFor="let opt of expertiseOptions" [value]="opt.value">{{ opt.label }}</option>
                     </select>
                 </div>
             </div>
@@ -299,13 +256,11 @@
         <!-- Header -->
         <div class="flex items-center justify-between p-6 border-b border-outline-variant/50">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-on-primary font-headline text-sm"
-                    [style.background]="editTarget()?.avatar_color">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-on-primary font-headline text-sm bg-surface-container-highest">
                     {{ editTarget()?.initials }}
                 </div>
                 <div>
                     <h2 class="font-headline font-bold text-on-surface text-xl">Editar Mecánico</h2>
-                    <p class="text-xs text-on-surface-variant font-mono">{{ editTarget()?.employee_code }}</p>
                 </div>
             </div>
             <button (click)="closeEditModal()"
@@ -316,20 +271,6 @@
 
         <!-- Form -->
         <div class="p-6 space-y-5">
-            <!-- Avatar color -->
-            <div class="flex flex-col gap-2">
-                <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Color del Avatar</label>
-                <div class="flex gap-2 flex-wrap">
-                    <button *ngFor="let color of avatarColors" (click)="updateEditField('avatar_color', color)"
-                        class="w-9 h-9 rounded-lg transition-transform hover:scale-110 flex items-center justify-center"
-                        [style.background]="color"
-                        [class]="editForm().avatar_color === color ? 'ring-2 ring-primary ring-offset-2 scale-110' : ''">
-                        <span *ngIf="editForm().avatar_color === color" class="material-symbols-outlined text-white"
-                            style="font-size:14px;">check</span>
-                    </button>
-                </div>
-            </div>
-
             <!-- Name -->
             <div class="flex flex-col gap-1.5">
                 <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Nombre Completo</label>
@@ -338,27 +279,12 @@
                     class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface" />
             </div>
 
-            <!-- Phone -->
-            <div class="flex flex-col gap-1.5">
-                <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Teléfono</label>
-                <input type="text" [ngModel]="editForm().phone" (ngModelChange)="updateEditField('phone', $event)"
-                    class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface" />
-            </div>
-
-            <!-- Specialty + Expertise -->
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 gap-4">
                 <div class="flex flex-col gap-1.5">
                     <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Especialidad</label>
                     <select [ngModel]="editForm().specialty" (ngModelChange)="updateEditField('specialty', $event)"
                         class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface">
                         <option *ngFor="let opt of specialtyOptions" [value]="opt.value">{{ opt.label }}</option>
-                    </select>
-                </div>
-                <div class="flex flex-col gap-1.5">
-                    <label class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant font-label">Nivel</label>
-                    <select [ngModel]="editForm().expertise" (ngModelChange)="updateEditField('expertise', $event)"
-                        class="bg-surface-container-low rounded-lg px-4 py-2.5 text-sm font-body focus:ring-2 focus:ring-primary/20 transition-all outline-none border-none text-on-surface">
-                        <option *ngFor="let opt of expertiseOptions" [value]="opt.value">{{ opt.label }}</option>
                     </select>
                 </div>
             </div>

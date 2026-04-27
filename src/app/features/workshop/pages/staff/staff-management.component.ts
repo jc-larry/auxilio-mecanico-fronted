@@ -2,8 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
-  AVATAR_COLORS,
-  EXPERTISE_OPTIONS,
   Mechanic,
   MechanicCreate,
   MechanicStats,
@@ -40,23 +38,16 @@ export class StaffManagementComponent implements OnInit {
   readonly editTarget = signal<Mechanic | null>(null);
   readonly creating = signal(false);
 
-  // ── Form model ──
   readonly newMechanic = signal<MechanicCreate>({
     full_name: '',
-    phone: '',
     specialty: 'general',
-    expertise: 'JUNIOR',
-    avatar_color: '#091426',
     workshop_id: null,
   });
 
   // ── Edit form ──
   readonly editForm = signal<MechanicUpdate>({});
 
-  // ── Options ──
   readonly specialtyOptions = SPECIALTY_OPTIONS;
-  readonly expertiseOptions = EXPERTISE_OPTIONS;
-  readonly avatarColors = AVATAR_COLORS;
 
   readonly pages = computed(() => {
     const total = this.totalPages();
@@ -118,13 +109,9 @@ export class StaffManagementComponent implements OnInit {
   // ── Create ──
 
   openCreateModal(): void {
-    const randomColor = AVATAR_COLORS[Math.floor(Math.random() * AVATAR_COLORS.length)];
     this.newMechanic.set({
       full_name: '',
-      phone: '',
       specialty: 'general',
-      expertise: 'JUNIOR',
-      avatar_color: randomColor,
       workshop_id: this.workshops()[0]?.id ?? null,
     });
     this.showCreateModal.set(true);
@@ -166,10 +153,7 @@ export class StaffManagementComponent implements OnInit {
     this.editTarget.set(mec);
     this.editForm.set({
       full_name: mec.full_name,
-      phone: mec.phone,
       specialty: mec.specialty,
-      expertise: mec.expertise,
-      avatar_color: mec.avatar_color,
       workshop_id: mec.workshop_id,
     });
     this.showEditModal.set(true);
