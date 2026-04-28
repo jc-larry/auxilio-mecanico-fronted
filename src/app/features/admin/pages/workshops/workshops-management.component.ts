@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Workshop, WorkshopCreate, WorkshopUpdate } from '../../../../core/models/workshop.models';
 import { WorkshopService } from '../../../../core/services/workshop.service';
 import { NotificationService } from '../../../../core/services/notification.service';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-workshops-management',
@@ -45,8 +46,21 @@ export class WorkshopsManagementComponent implements OnInit {
 
   constructor(
     private workshopService: WorkshopService,
+    private authService: AuthService,
     private notify: NotificationService
   ) {}
+
+  readonly user = computed(() => this.authService.currentUser());
+  readonly isOwner = computed(() => this.user()?.roles?.includes('Propietario'));
+  readonly isAdmin = computed(() => this.user()?.roles?.includes('Administrador'));
+  
+  readonly canCreateWorkshop = computed(() => {
+    if (this.isAdmin()) return true;
+    if (this.isOwner()) {
+      return this.workshops().length === 0;
+    }
+    return false;
+  });
 
   ngOnInit(): void {
     this.loadWorkshops();

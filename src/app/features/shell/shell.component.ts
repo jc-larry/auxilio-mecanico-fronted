@@ -25,6 +25,7 @@ export class ShellComponent {
     return name.split(' ').slice(0, 2).map(n => n[0]).join('').toUpperCase();
   });
 
+  isCollapsed = signal<boolean>(false);
   expandedMenus = signal<Set<string>>(new Set());
 
   readonly allNavItems: NavItem[] = [
@@ -35,13 +36,13 @@ export class ShellComponent {
     {
       label: 'Administración',
       icon: 'admin_panel_settings',
-      requiredRole: 'Administrador',
+      requiredRole: 'Administrador, Propietario',
       children: [
         {
           label: 'Gestionar Usuarios',
           icon: 'manage_accounts',
           route: '/dashboard/users',
-          requiredPermission: 'usuarios.ver',
+          requiredRole: 'Administrador'
         },
         {
           label: 'Gestionar Roles',
@@ -60,6 +61,12 @@ export class ShellComponent {
           icon: 'handyman',
           route: '/dashboard/services',
           requiredPermission: 'servicios.ver',
+        },
+        {
+          label: 'Gestionar Talleres',
+          icon: 'home_repair_service',
+          route: '/dashboard/workshops',
+          requiredPermission: 'talleres.ver',
         },
       ],
     },
@@ -102,30 +109,14 @@ export class ShellComponent {
     const permissions = this.user()?.permissions || [];
     const roles = this.user()?.roles || [];
     const tallerId = this.user()?.taller_id;
-    const isPropietario = roles.includes('Propietario');
 
     const filterItems = (items: NavItem[]): NavItem[] => {
       return items.reduce((acc: NavItem[], item) => {
         let currentItem = { ...item };
         
-        // Special logic for "Mi Taller"
-        if (currentItem.label === 'Mi Taller') {
-          if (!tallerId) {
-            if (isPropietario) {
-              // Propietario without a workshop can register one
-              currentItem.children = [
-                {
-                  label: 'Registrar Taller',
-                  icon: 'add_business',
-                  route: '/dashboard/workshops',
-                  requiredPermission: 'talleres.crear'
-                }
-              ];
-            } else {
-              // Any other role (like Mecánico) without a workshop doesn't see "Mi Taller"
-              return acc;
-            }
-          }
+        // Filter out "Mi Taller" if no workshop is registered
+        if (currentItem.label === 'Mi Taller' && !tallerId) {
+          return acc;
         }
 
         const hasPermission = !currentItem.requiredPermission || 
@@ -151,6 +142,10 @@ export class ShellComponent {
   });
 
   constructor(private authService: AuthService, private router: Router) { }
+
+  toggleSidebar(): void {
+    this.isCollapsed.set(!this.isCollapsed());
+  }
 
   toggleMenu(label: string): void {
     const current = new Set(this.expandedMenus());
