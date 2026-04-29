@@ -50,7 +50,7 @@
                         <td class="py-4 px-5">
                             <div class="flex items-center gap-3">
                                 <div class="w-9 h-9 rounded-full machined-gradient flex items-center justify-center text-on-primary font-headline font-bold text-xs shadow-sm shrink-0">
-                                    {{ log.usuario?.full_name ? log.usuario.full_name.charAt(0).toUpperCase() : 'S' }}
+                                    {{ log.usuario?.full_name ? log.usuario?.full_name?.charAt(0)?.toUpperCase() : 'S' }}
                                 </div>
                                 <div>
                                     <p class="font-headline font-bold text-sm text-on-surface">{{ log.usuario?.full_name || 'Sistema' }}</p>
