@@ -1,11 +1,11 @@
-<div class="p-8 space-y-8 bg-background min-h-full">
+<div class="p-4 md:p-8 space-y-6 md:space-y-8 bg-background min-h-full">
     <!-- Welcome section for Propietario without workshop -->
     <div *ngIf="user()?.taller_id === null && user()?.roles?.includes('Propietario')"
         class="text-center py-20 bg-surface-container-lowest rounded-2xl border border-outline-variant/60 ghost-shadow">
         <div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
             <span class="material-symbols-outlined text-primary" style="font-size:40px;">handshake</span>
         </div>
-        <h1 class="text-3xl font-headline font-extrabold text-on-surface mb-2">¡Bienvenido, {{ user()?.full_name }}!</h1>
+        <h1 class="text-xl md:text-3xl font-headline font-extrabold text-on-surface mb-2">¡Bienvenido, {{ user()?.full_name }}!</h1>
         <p class="text-on-surface-variant max-w-md mx-auto mb-8 font-body">Para comenzar a gestionar tu equipo y solicitudes, primero debes registrar tu taller en la plataforma.</p>
         <button [routerLink]="['/dashboard/workshops']"
             class="machined-gradient text-on-primary px-8 py-3 rounded-xl text-sm font-bold font-label ghost-shadow active:scale-[0.98] transition-transform flex items-center gap-2 mx-auto">
@@ -20,14 +20,14 @@
         <div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
             <span class="material-symbols-outlined text-primary" style="font-size:40px;">engineering</span>
         </div>
-        <h1 class="text-3xl font-headline font-extrabold text-on-surface mb-2">Hola, {{ user()?.full_name }}</h1>
+        <h1 class="text-xl md:text-3xl font-headline font-extrabold text-on-surface mb-2">Hola, {{ user()?.full_name }}</h1>
         <p class="text-on-surface-variant max-w-md mx-auto font-body">Aún no has sido asignado a ningún taller operativo. Por favor, contacta con el administrador del sistema para que se te asigne uno.</p>
     </div>
 
     <!-- Main Dashboard for assigned users or Admins -->
     <ng-container *ngIf="user()?.taller_id !== null || user()?.roles?.includes('Administrador')">
         <!-- ── KPI row ── -->
-        <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <section class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
 
             <div
                 class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/50 ghost-shadow flex items-center justify-between">
@@ -80,7 +80,7 @@
         <!-- ── Live service requests ── -->
         <section>
             <div class="flex items-end justify-between mb-5">
-                <h2 class="font-headline font-bold text-2xl text-on-surface">Últimas Solicitudes</h2>
+                <h2 class="font-headline font-bold text-lg md:text-2xl text-on-surface">Últimas Solicitudes</h2>
                 <div class="flex gap-2">
                     <button [routerLink]="['/dashboard/requests']"
                         class="px-4 py-2 bg-surface-container text-on-surface-variant rounded-full text-xs font-bold font-label border border-outline-variant/40 hover:bg-surface-container-high transition-colors">
@@ -89,7 +89,7 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-5">
                 <div *ngFor="let req of requests()"
                     class="bg-surface-container-lowest rounded-xl overflow-hidden border border-outline-variant/60 ghost-shadow">
                     <!-- Banner gradient -->
@@ -155,7 +155,7 @@
                 </div>
 
                 <div *ngIf="requests().length === 0"
-                    class="col-span-3 bg-surface-container-lowest rounded-xl border border-outline-variant/60 p-8 text-center text-on-surface-variant font-bold text-sm ghost-shadow">
+                    class="col-span-1 sm:col-span-2 md:col-span-3 bg-surface-container-lowest rounded-xl border border-outline-variant/60 p-8 text-center text-on-surface-variant font-bold text-sm ghost-shadow">
                     No hay solicitudes recientes en el sistema.
                 </div>
             </div>
@@ -173,13 +173,13 @@
                 </div>
 
                 <div
-                    class="grid grid-cols-4 px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant font-label">
+                    class="grid grid-cols-2 md:grid-cols-4 px-4 md:px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant font-label">
                     <span class="col-span-2">Técnico</span><span>Especialidad</span><span class="text-right">Estado</span>
                 </div>
 
                 <div class="space-y-1 px-2 pb-4">
                     <div *ngFor="let tech of technicians()"
-                        class="grid grid-cols-4 items-center px-4 py-3 rounded-lg bg-surface-container-lowest hover:bg-surface-container-high transition-colors">
+                        class="grid grid-cols-2 md:grid-cols-4 items-center px-4 py-3 rounded-lg bg-surface-container-lowest hover:bg-surface-container-high transition-colors">
                         <div class="col-span-2 flex items-center gap-3">
                             <div class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs text-on-primary font-label shrink-0 uppercase bg-surface-container-highest text-on-surface">
                                 {{ tech.initials }}

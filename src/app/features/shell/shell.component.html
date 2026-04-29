@@ -1,7 +1,18 @@
 <div class="flex min-h-screen bg-background font-body">
+
+    <!-- ── Mobile Backdrop ── -->
+    <div *ngIf="isMobile() && sidebarOpen()" (click)="closeMobileSidebar()"
+        class="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 transition-opacity"></div>
+
     <!-- ── Sidebar ── -->
-    <aside [class.w-64]="!isCollapsed()" [class.w-20]="isCollapsed()"
-        class="h-screen fixed left-0 top-0 bg-slate-100 flex flex-col py-6 px-4 z-50 border-r border-outline-variant/30 transition-all duration-300">
+    <aside
+        [class.w-64]="!isMobile() && !isCollapsed()"
+        [class.w-20]="!isMobile() && isCollapsed()"
+        [class.translate-x-0]="!isMobile() || sidebarOpen()"
+        [class.-translate-x-full]="isMobile() && !sidebarOpen()"
+        class="h-screen fixed left-0 top-0 bg-slate-100 flex flex-col py-6 px-4 z-50
+               border-r border-outline-variant/30 transition-all duration-300
+               w-[280px] md:w-auto">
 
         <!-- Brand -->
         <div class="mb-10 px-2 flex items-center gap-3 overflow-hidden">
@@ -9,16 +20,21 @@
                 <span class="material-symbols-outlined text-on-primary"
                     style="font-variation-settings:'FILL' 1; font-size:22px;">handyman</span>
             </div>
-            <div *ngIf="!isCollapsed()" class="whitespace-nowrap">
+            <div *ngIf="isMobile() || !isCollapsed()" class="whitespace-nowrap">
                 <h1 class="font-headline font-bold text-on-surface text-lg leading-tight">Auxilio Mecánico</h1>
                 <p class="text-[10px] uppercase tracking-widest text-on-surface-variant font-label font-bold">
                     {{ user()?.roles?.[0] || 'Usuario' }}
                 </p>
             </div>
+            <!-- Mobile close button -->
+            <button *ngIf="isMobile()" (click)="closeMobileSidebar()"
+                class="ml-auto p-1.5 text-on-surface-variant hover:bg-slate-200 rounded-lg transition-colors border-none">
+                <span class="material-symbols-outlined" style="font-size:20px;">close</span>
+            </button>
         </div>
 
-        <!-- Toggle Button -->
-        <button (click)="toggleSidebar()"
+        <!-- Toggle Button (desktop only) -->
+        <button *ngIf="!isMobile()" (click)="toggleSidebar()"
             class="absolute -right-3 top-20 bg-white border border-outline-variant/30 rounded-full w-6 h-6 flex items-center justify-center shadow-sm z-50 hover:bg-slate-50 transition-colors">
             <span class="material-symbols-outlined" style="font-size:16px;">
                 {{ isCollapsed() ? 'chevron_right' : 'chevron_left' }}
@@ -30,22 +46,22 @@
             <div *ngFor="let item of navItems()">
                 <!-- Menu Parent with Children -->
                 <div *ngIf="item.children; else singleItem">
-                    <button (click)="isCollapsed() ? toggleSidebar() : toggleMenu(item.label)"
-                        [title]="isCollapsed() ? item.label : ''"
+                    <button (click)="!isMobile() && isCollapsed() ? toggleSidebar() : toggleMenu(item.label)"
+                        [title]="!isMobile() && isCollapsed() ? item.label : ''"
                         class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg font-headline font-semibold tracking-tight
                                text-on-surface-variant hover:text-on-surface hover:bg-slate-200/50 transition-all duration-150 active:scale-[0.98]">
                         <div class="flex items-center gap-3">
                             <span class="material-symbols-outlined" style="font-size:20px;">{{ item.icon }}</span>
-                            <span *ngIf="!isCollapsed()" class="whitespace-nowrap">{{ item.label }}</span>
+                            <span *ngIf="isMobile() || !isCollapsed()" class="whitespace-nowrap">{{ item.label }}</span>
                         </div>
-                        <span *ngIf="!isCollapsed()" class="material-symbols-outlined transition-transform duration-200"
+                        <span *ngIf="isMobile() || !isCollapsed()" class="material-symbols-outlined transition-transform duration-200"
                             [class.rotate-180]="isExpanded(item.label)" style="font-size:18px;">
                             expand_more
                         </span>
                     </button>
 
                     <!-- Children items -->
-                    <div *ngIf="isExpanded(item.label) && !isCollapsed()" class="mt-1 ml-4 pl-4 border-l border-slate-300/50 space-y-1">
+                    <div *ngIf="isExpanded(item.label) && (isMobile() || !isCollapsed())" class="mt-1 ml-4 pl-4 border-l border-slate-300/50 space-y-1">
                         <a *ngFor="let child of item.children" [routerLink]="child.route"
                             routerLinkActive="text-on-surface font-bold bg-slate-200/30"
                             [routerLinkActiveOptions]="{ exact: true }"
@@ -59,13 +75,13 @@
 
                 <!-- Single Menu Item -->
                 <ng-template #singleItem>
-                    <a [routerLink]="item.route" [title]="isCollapsed() ? item.label : ''"
+                    <a [routerLink]="item.route" [title]="!isMobile() && isCollapsed() ? item.label : ''"
                         routerLinkActive="bg-white text-on-surface shadow-sm scale-[0.98] font-semibold"
                         [routerLinkActiveOptions]="{ exact: true }"
                         class="flex items-center gap-3 px-3 py-2.5 border border-outline-variant/40 rounded-lg font-headline font-semibold tracking-tight
                                text-on-surface-variant hover:text-on-surface hover:bg-slate-200/50 transition-all duration-150 active:scale-[0.98]">
                         <span class="material-symbols-outlined" style="font-size:20px;">{{ item.icon }}</span>
-                        <span *ngIf="!isCollapsed()" class="whitespace-nowrap">{{ item.label }}</span>
+                        <span *ngIf="isMobile() || !isCollapsed()" class="whitespace-nowrap">{{ item.label }}</span>
                     </a>
                 </ng-template>
             </div>
@@ -78,21 +94,45 @@
                               text-on-primary font-headline font-bold text-sm shrink-0">
                     {{ initials() }}
                 </div>
-                <div *ngIf="!isCollapsed()" class="text-left whitespace-nowrap">
+                <div *ngIf="isMobile() || !isCollapsed()" class="text-left whitespace-nowrap">
                     <p class="text-sm font-headline font-bold text-on-surface">{{ user()?.full_name }}</p>
                     <p class="text-[10px] font-headline font-label text-on-surface-variant truncate max-w-[140px]">{{ user()?.email }}</p>
                 </div>
             </div>
-            <button (click)="logout()" [title]="isCollapsed() ? 'Cerrar sesión' : ''"
+            <button (click)="logout()" [title]="!isMobile() && isCollapsed() ? 'Cerrar sesión' : ''"
                 class="w-full flex items-center gap-3 text-sm text-error font-bold hover:text-white transition-all px-3 py-2
                          rounded-lg hover:bg-error border border-error/40 hover:border-error active:scale-[0.98] overflow-hidden">
                 <span class="material-symbols-outlined shrink-0" style="font-size:20px;">logout</span>
-                <span *ngIf="!isCollapsed()" class="whitespace-nowrap">Cerrar sesión</span>
+                <span *ngIf="isMobile() || !isCollapsed()" class="whitespace-nowrap">Cerrar sesión</span>
             </button>
         </div>
     </aside>
 
-    <div [class.ml-64]="!isCollapsed()" [class.ml-20]="isCollapsed()" class="flex flex-col flex-1 min-h-screen transition-all duration-300">
+    <!-- ── Main Content Area ── -->
+    <div [class.md:ml-64]="!isCollapsed()"
+         [class.md:ml-20]="isCollapsed()"
+         class="flex flex-col flex-1 min-h-screen transition-all duration-300 ml-0 w-full overflow-x-hidden">
+
+        <!-- Mobile Top Bar -->
+        <header *ngIf="isMobile()"
+            class="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-outline-variant/30 flex items-center gap-3 px-4 py-3">
+            <button (click)="openMobileSidebar()"
+                class="p-2 text-on-surface hover:bg-surface-container rounded-lg transition-colors border-none">
+                <span class="material-symbols-outlined" style="font-size:24px;">menu</span>
+            </button>
+            <div class="flex items-center gap-2 flex-1 min-w-0">
+                <div class="w-8 h-8 machined-gradient rounded-lg flex items-center justify-center shrink-0">
+                    <span class="material-symbols-outlined text-on-primary"
+                        style="font-variation-settings:'FILL' 1; font-size:16px;">handyman</span>
+                </div>
+                <h1 class="font-headline font-bold text-on-surface text-base truncate">Auxilio Mecánico</h1>
+            </div>
+            <div class="w-8 h-8 rounded-full machined-gradient flex items-center justify-center
+                          text-on-primary font-headline font-bold text-xs shrink-0">
+                {{ initials() }}
+            </div>
+        </header>
+
         <main class="flex-1">
             <router-outlet />
         </main>

@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, signal } from '@angular/core';
-import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Component, computed, signal, HostListener, OnInit } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet, NavigationEnd } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
+import { filter } from 'rxjs/operators';
 
 interface NavItem {
   label: string;
@@ -18,15 +19,31 @@ interface NavItem {
   imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive],
   templateUrl: './shell.component.html',
 })
-export class ShellComponent {
+export class ShellComponent implements OnInit {
   user = computed(() => this.authService.currentUser());
   initials = computed(() => {
     const name = this.user()?.full_name ?? '';
     return name.split(' ').slice(0, 2).map(n => n[0]).join('').toUpperCase();
   });
 
+  /** true when viewport width < 768px (Tailwind md breakpoint) */
+  isMobile = signal<boolean>(typeof window !== 'undefined' && window.innerWidth < 768);
+
+  /** controls whether the sidebar drawer is visible on mobile */
+  sidebarOpen = signal<boolean>(false);
+
   isCollapsed = signal<boolean>(false);
   expandedMenus = signal<Set<string>>(new Set());
+
+  @HostListener('window:resize')
+  onResize(): void {
+    const mobile = window.innerWidth < 768;
+    this.isMobile.set(mobile);
+    if (!mobile) {
+      // when switching back to desktop, ensure drawer state is irrelevant
+      this.sidebarOpen.set(false);
+    }
+  }
 
   readonly allNavItems: NavItem[] = [
     // ── Acceso para todos los usuarios ──────────────────────────────────────
@@ -143,8 +160,31 @@ export class ShellComponent {
 
   constructor(private authService: AuthService, private router: Router) { }
 
+  ngOnInit(): void {
+    // Auto-close mobile sidebar on every successful navigation
+    this.router.events
+      .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
+      .subscribe(() => {
+        if (this.isMobile()) {
+          this.sidebarOpen.set(false);
+        }
+      });
+  }
+
   toggleSidebar(): void {
-    this.isCollapsed.set(!this.isCollapsed());
+    if (this.isMobile()) {
+      this.sidebarOpen.set(!this.sidebarOpen());
+    } else {
+      this.isCollapsed.set(!this.isCollapsed());
+    }
+  }
+
+  openMobileSidebar(): void {
+    this.sidebarOpen.set(true);
+  }
+
+  closeMobileSidebar(): void {
+    this.sidebarOpen.set(false);
   }
 
   toggleMenu(label: string): void {

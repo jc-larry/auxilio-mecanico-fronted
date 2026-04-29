@@ -1,11 +1,11 @@
-<div class="p-8 max-w-7xl mx-auto font-body">
+<div class="p-4 md:p-8 max-w-7xl mx-auto font-body">
 
     <!-- Header -->
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
-        <h1 class="font-headline font-extrabold text-on-surface text-3xl">Solicitudes</h1>
+        <h1 class="font-headline font-extrabold text-on-surface text-xl md:text-3xl">Solicitudes</h1>
         <div class="flex flex-wrap justify-end items-center gap-3">
             <!-- Status filter -->
-            <div class="flex items-center gap-1 bg-surface-container-low p-1 rounded-xl">
+            <div class="flex items-center gap-1 bg-surface-container-low p-1 rounded-xl overflow-x-auto">
                 <button (click)="onFilterChange(null)"
                     class="px-3 py-1.5 rounded-lg text-xs font-bold font-label transition-colors" [class]="statusFilter() === null
                         ? 'bg-surface-container-lowest ghost-shadow text-primary'

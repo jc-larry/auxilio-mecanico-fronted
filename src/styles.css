@@ -8,11 +8,19 @@
 @layer base {
   * { box-sizing: border-box; }
 
+  html {
+    overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
+  }
+
   body {
     font-family: 'Inter', sans-serif;
     background-color: #f9f9ff;
     color: #111c2d;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    touch-action: pan-x pan-y;
+    -ms-touch-action: pan-x pan-y;
   }
 
   h1, h2, h3, h4 { font-family: 'Manrope', sans-serif; }
