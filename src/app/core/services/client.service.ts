@@ -3,10 +3,11 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PaginatedClientResponse } from '../models/client.models';
 import { Vehicle } from '../models/vehicle.models';
+import { API_CONFIG } from '../config/api.config';
 
 @Injectable({ providedIn: 'root' })
 export class ClientService {
-  private readonly apiUrl = 'http://localhost:8000/api/v1/clients';
+  private readonly apiUrl = `${API_CONFIG.baseUrl}/clients`;
 
   constructor(private http: HttpClient) {}
 

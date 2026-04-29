@@ -2,11 +2,12 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Role, RoleCreate, RoleUpdate, PaginatedRoleResponse, Permission } from '../models/role.models';
+import { API_CONFIG } from '../config/api.config';
 
 @Injectable({ providedIn: 'root' })
 export class RoleService {
-  private readonly apiUrl = 'http://localhost:8000/api/v1/roles';
-  private readonly permissionsUrl = 'http://localhost:8000/api/v1/permissions';
+  private readonly apiUrl = `${API_CONFIG.baseUrl}/roles`;
+  private readonly permissionsUrl = `${API_CONFIG.baseUrl}/permissions`;
 
   constructor(private http: HttpClient) {}
 

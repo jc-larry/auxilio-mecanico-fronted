@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
+import { API_CONFIG } from '../config/api.config';
 
 export interface AuditLogUser {
   id: number;
@@ -33,7 +34,7 @@ export interface PaginatedAuditLogResponse {
 })
 export class BitacoraService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8000/api/v1/bitacora';
+  private apiUrl = `${API_CONFIG.baseUrl}/bitacora`;
 
   getLogs(page: number = 1, perPage: number = 20): Observable<PaginatedAuditLogResponse> {
     const params = new HttpParams()

@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { API_CONFIG } from '../config/api.config';
 import {
   PaginatedServiceTypeResponse,
   ServiceType,
@@ -12,7 +13,7 @@ import {
   providedIn: 'root'
 })
 export class ServiceTypeService {
-  private readonly apiUrl = 'http://localhost:8000/api/v1/service-types';
+  private readonly apiUrl = `${API_CONFIG.baseUrl}/service-types`;
 
   constructor(private http: HttpClient) {}
 

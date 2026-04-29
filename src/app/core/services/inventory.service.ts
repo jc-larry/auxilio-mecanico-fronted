@@ -9,10 +9,11 @@ import {
   PaginatedResponse,
   RestockRequest,
 } from '../models/inventory.models';
+import { API_CONFIG } from '../config/api.config';
 
 @Injectable({ providedIn: 'root' })
 export class InventoryService {
-  private readonly apiUrl = 'http://localhost:8000/api/v1/inventory';
+  private readonly apiUrl = `${API_CONFIG.baseUrl}/inventory`;
 
   constructor(private http: HttpClient) {}
 

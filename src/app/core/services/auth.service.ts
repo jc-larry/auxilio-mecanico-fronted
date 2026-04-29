@@ -4,10 +4,11 @@ import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { LoginRequest, RegisterRequest, TokenResponse, User } from '../models/auth.models';
 import { TokenService } from './token.service';
+import { API_CONFIG } from '../config/api.config';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly apiUrl = 'http://localhost:8000/api/v1/auth';
+  private readonly apiUrl = `${API_CONFIG.baseUrl}/auth`;
 
   currentUser = signal<User | null>(null);
   isAuthenticated = signal<boolean>(false);

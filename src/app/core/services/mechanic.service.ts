@@ -8,10 +8,11 @@ import {
   MechanicUpdate,
   PaginatedResponse,
 } from '../models/mechanic.models';
+import { API_CONFIG } from '../config/api.config';
 
 @Injectable({ providedIn: 'root' })
 export class MechanicService {
-  private readonly apiUrl = 'http://localhost:8000/api/v1/mechanics';
+  private readonly apiUrl = `${API_CONFIG.baseUrl}/mechanics`;
 
   constructor(private http: HttpClient) {}
 

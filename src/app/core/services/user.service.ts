@@ -3,10 +3,11 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { User, RegisterRequest } from '../models/auth.models';
 import { PaginatedUserResponse, UserUpdate } from '../models/user.models';
+import { API_CONFIG } from '../config/api.config';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-  private readonly apiUrl = 'http://localhost:8000/api/v1/users';
+  private readonly apiUrl = `${API_CONFIG.baseUrl}/users`;
 
   constructor(private http: HttpClient) {}
 

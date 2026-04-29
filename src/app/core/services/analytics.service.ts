@@ -2,10 +2,11 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DashboardAnalytics } from '../models/analytics.models';
+import { API_CONFIG } from '../config/api.config';
 
 @Injectable({ providedIn: 'root' })
 export class AnalyticsService {
-  private readonly apiUrl = 'http://localhost:8000/api/v1/analytics';
+  private readonly apiUrl = `${API_CONFIG.baseUrl}/analytics`;
 
   constructor(private http: HttpClient) {}
 

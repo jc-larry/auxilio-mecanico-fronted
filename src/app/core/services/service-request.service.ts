@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { API_CONFIG } from '../config/api.config';
 import {
   PaginatedResponse,
   ServiceRequest,
@@ -12,7 +13,7 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class ServiceRequestService {
-  private readonly apiUrl = 'http://localhost:8000/api/v1/service-requests';
+  private readonly apiUrl = `${API_CONFIG.baseUrl}/service-requests`;
 
   constructor(private http: HttpClient) {}
 
