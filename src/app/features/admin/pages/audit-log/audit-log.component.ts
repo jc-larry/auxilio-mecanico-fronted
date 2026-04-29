@@ -49,6 +49,7 @@ export class AuditLogComponent implements OnInit {
   }
 
   getActionLabel(accion: string): string {
+    if (!accion) return 'Acción Desconocida';
     const labels: Record<string, string> = {
       'INICIO_SESION': 'Inicio de Sesión',
       'NUEVO_USUARIO': 'Nuevo Usuario',
@@ -62,6 +63,7 @@ export class AuditLogComponent implements OnInit {
   }
 
   getActionClasses(accion: string): string {
+    if (!accion) return 'bg-outline-variant/10 text-on-surface-variant';
     const map: Record<string, string> = {
       'INICIO_SESION': 'bg-primary/10 text-primary',
       'NUEVO_USUARIO': 'bg-emerald-500/10 text-emerald-600',
@@ -75,6 +77,7 @@ export class AuditLogComponent implements OnInit {
   }
 
   getEntityLabel(entidad: string): string {
+    if (!entidad) return 'N/A';
     const labels: Record<string, string> = {
       'Usuario': 'Usuario',
       'SolicitudServicio': 'Solicitud',
@@ -85,12 +88,17 @@ export class AuditLogComponent implements OnInit {
 
   formatDetails(detalles: any): string {
     if (!detalles) return '';
-    const parts: string[] = [];
-    if (detalles.email) parts.push(detalles.email);
-    if (detalles.codigo) parts.push(detalles.codigo);
-    if (detalles.nuevo_estado) parts.push(detalles.nuevo_estado);
-    if (detalles.disponible !== undefined) parts.push(detalles.disponible ? 'Disponible' : 'No disponible');
-    if (detalles.roles) parts.push(detalles.roles.join(', '));
-    return parts.join(' · ') || JSON.stringify(detalles);
+    try {
+      if (typeof detalles === 'string') return detalles;
+      const parts: string[] = [];
+      if (detalles.email) parts.push(detalles.email);
+      if (detalles.codigo) parts.push(detalles.codigo);
+      if (detalles.nuevo_estado) parts.push(detalles.nuevo_estado);
+      if (detalles.disponible !== undefined) parts.push(detalles.disponible ? 'Disponible' : 'No disponible');
+      if (detalles.roles && Array.isArray(detalles.roles)) parts.push(detalles.roles.join(', '));
+      return parts.join(' · ') || JSON.stringify(detalles);
+    } catch (e) {
+      return String(detalles);
+    }
   }
 }
